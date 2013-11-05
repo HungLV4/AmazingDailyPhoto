@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{60795534-FA2E-4BD9-AAF4-2B9333040B34}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Grow_Up</RootNamespace>
+    <AssemblyName>Grow Up</AssemblyName>
+    <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>
+    </SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>Grow_Up_$(Configuration)_$(Platform).xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>Grow_Up.App</SilverlightAppEntry>
+    <ValidateXaml>true</ValidateXaml>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ARM' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\ARM\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\ARM\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AddMetaDataPage.xaml.cs">
+      <DependentUpon>AddMetaDataPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CalendarGenerationPage.xaml.cs">
+      <DependentUpon>CalendarGenerationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\OpenLockscreenSettingCommand.cs" />
+    <Compile Include="Commands\RateThisAppCommand.cs" />
+    <Compile Include="Commands\SendAnEmailCommand.cs" />
+    <Compile Include="Converters\AutoBackgroundPreviewSrc.cs" />
+    <Compile Include="Converters\AutoBackgroundSrc.cs" />
+    <Compile Include="Converters\AutoCalendarBackgroundPreview.cs" />
+    <Compile Include="Converters\AutoScreenResolution.cs" />
+    <Compile Include="Converters\DateTimeToDate.cs" />
+    <Compile Include="Converters\DateTimeToTime.cs" />
+    <Compile Include="Converters\IsTrial2Visibility.cs" />
+    <Compile Include="Converters\StringShorten.cs" />
+    <Compile Include="FilterPreviewPage.xaml.cs">
+      <DependentUpon>FilterPreviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\OSHelper.cs" />
+    <Compile Include="Helpers\CoordinateConverter.cs" />
+    <Compile Include="Helpers\KeyedList.cs" />
+    <Compile Include="Helpers\RAJPEGDecoder.cs" />
+    <Compile Include="Helpers\ResolutionHelper.cs" />
+    <Compile Include="Helpers\TombstoningHelper.cs" />
+    <Compile Include="LocalizedStrings.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\DateData.cs" />
+    <Compile Include="Model\DateDataContext.cs" />
+    <Compile Include="Model\Entry.cs" />
+    <Compile Include="PhotoCapturePage.xaml.cs">
+      <DependentUpon>PhotoCapturePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\AppResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AppResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="BindableCommand\CommandSampleViewModel.cs" />
+    <Compile Include="SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateSelector\TemplateSelector .cs" />
+    <Compile Include="ViewModel\VM.cs" />
+    <Compile Include="View\CalendarForRender.xaml.cs">
+      <DependentUpon>CalendarForRender.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CalendarView.xaml.cs">
+      <DependentUpon>CalendarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImageSlideView.xaml.cs">
+      <DependentUpon>ImageSlideView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PanoramaFullScreen.cs" />
+    <Compile Include="View\PhotosView.xaml.cs">
+      <DependentUpon>PhotosView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PhotoThumbnail.xaml.cs">
+      <DependentUpon>PhotoThumbnail.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Page Include="AddMetaDataPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CalendarGenerationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FilterPreviewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PhotoCapturePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CalendarForRender.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CalendarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImageSlideView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PhotosView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PhotoThumbnail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\AppManifest.xml" />
+    <None Include="Properties\WMAppManifest.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Background\3.jpg" />
+    <Content Include="Assets\Background\1.jpg" />
+    <Content Include="Assets\Background\6.jpg" />
+    <Content Include="Assets\Background\2.jpg" />
+    <Content Include="Assets\Background\0.jpg" />
+    <Content Include="Assets\Background\4.jpg" />
+    <Content Include="Assets\Background\5.jpg" />
+    <Content Include="Assets\add.png" />
+    <Content Include="Assets\CalendarTemplate\0.jpg" />
+    <Content Include="Assets\CalendarTemplate\1.jpg" />
+    <Content Include="Assets\CalendarTemplate\10.jpg" />
+    <Content Include="Assets\CalendarTemplate\11.jpg" />
+    <Content Include="Assets\CalendarTemplate\12.jpg" />
+    <Content Include="Assets\CalendarTemplate\13.jpg" />
+    <Content Include="Assets\CalendarTemplate\14.jpg" />
+    <Content Include="Assets\CalendarTemplate\15.jpg" />
+    <Content Include="Assets\CalendarTemplate\16.jpg" />
+    <Content Include="Assets\CalendarTemplate\17.jpg" />
+    <Content Include="Assets\CalendarTemplate\18.jpg" />
+    <Content Include="Assets\CalendarTemplate\19.jpg" />
+    <Content Include="Assets\CalendarTemplate\2.jpg" />
+    <Content Include="Assets\CalendarTemplate\20.jpg" />
+    <Content Include="Assets\CalendarTemplate\21.jpg" />
+    <Content Include="Assets\CalendarTemplate\22.jpg" />
+    <Content Include="Assets\CalendarTemplate\23.jpg" />
+    <Content Include="Assets\CalendarTemplate\24.jpg" />
+    <Content Include="Assets\CalendarTemplate\3.jpg" />
+    <Content Include="Assets\CalendarTemplate\4.jpg" />
+    <Content Include="Assets\CalendarTemplate\5.jpg" />
+    <Content Include="Assets\CalendarTemplate\6.jpg" />
+    <Content Include="Assets\CalendarTemplate\7.jpg" />
+    <Content Include="Assets\CalendarTemplate\8.jpg" />
+    <Content Include="Assets\CalendarTemplate\9.jpg" />
+    <Content Include="Assets\check.png" />
+    <Content Include="Assets\feature.calendar.png" />
+    <Content Include="Assets\feature.camera.png" />
+    <Content Include="Assets\feature.settings.png" />
+    <Content Include="Assets\folder.png" />
+    <Content Include="Assets\lock.png" />
+    <Content Include="Assets\next.png" />
+    <Content Include="Assets\onexone.jpg" />
+    <Content Include="Assets\profile.jpg" />
+    <Content Include="Assets\save.png" />
+    <Content Include="Assets\search_bg.png" />
+    <Content Include="Assets\Tiles\flip_medium.jpg" />
+    <Content Include="Assets\Tiles\flip_small.png" />
+    <Content Include="Assets\Tiles\icon.png" />
+    <Content Include="DefaultLockScreen.jpg" />
+    <Content Include="Images\DateTimePickerCancel.png" />
+    <Content Include="Images\DateTimePickerOK.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AppResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Coding4Fun.Toolkit.Controls">
+      <HintPath>..\packages\Coding4Fun.Toolkit.Controls.2.0.7\lib\windowsphone8\Coding4Fun.Toolkit.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="ExifLib">
+      <HintPath>..\packages\ExifLib.1.4.7.0\lib\sl3-wp\ExifLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Phone.Controls.Toolkit">
+      <HintPath>..\packages\WPToolkit.4.2013.06.11\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Nokia.Graphics.Imaging.Managed">
+      <HintPath>..\packages\NokiaImagingSDK.0.9.2\lib\wp8\Nokia.Graphics.Imaging.Managed.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=3.9.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Windows.Controls.Input, Version=2013.3.1016.3040, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Windows.Controls.Primitives, Version=2013.3.1016.3040, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Windows.Core, Version=2013.3.1016.3040, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Windows.Data, Version=2013.3.1016.3040, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Commons\Commons.csproj">
+      <Project>{D7591E8B-4E29-495E-8FEA-5AE1F271DE90}</Project>
+      <Name>Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{A74189B7-DE56-4FA9-BAB7-DAFE34DB74D3}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScheduledLockscreenAgent\ScheduledLockscreenAgent.csproj">
+      <Project>{7F3FB2D8-17DB-435B-B727-4290966043C0}</Project>
+      <Name>ScheduledLockscreenAgent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WPControls\WPControls.csproj">
+      <Project>{15A9E5AB-7282-4BFD-98C6-06DD26051399}</Project>
+      <Name>WPControls</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions />
+  <Import Project="..\packages\NokiaImagingSDK.0.9.2\build\wp8\NokiaImagingSDK.targets" Condition="Exists('..\packages\NokiaImagingSDK.0.9.2\build\wp8\NokiaImagingSDK.targets')" />
+</Project>

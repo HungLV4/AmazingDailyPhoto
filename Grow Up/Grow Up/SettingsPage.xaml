@@ -1,0 +1,225 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="Grow_Up.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:cv="clr-namespace:Grow_Up.Converters"
+    xmlns:bindableCommand="clr-namespace:Grow_Up.BindableCommand"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="False">
+
+    <phone:PhoneApplicationPage.Resources>
+        <cv:AutoBackgroundPreviewSrc x:Key="AutoBackgroundPreviewSrc"/>
+        <cv:AutoBackgroundSrc x:Key="AutoBackgroundSrc"/>
+
+        <Style x:Key="ListBackgroundItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="{StaticResource PhoneAccentColor}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="LayoutRoot" Margin="5,0,0,0" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="4" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Disabled"/>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="SelectionStates">
+                                    <VisualState x:Name="Unselected"/>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="LayoutRoot">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <SolidColorBrush Color="White"/>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Image Width="136" Height="226" Source="{Binding Converter={StaticResource AutoBackgroundPreviewSrc}}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot">
+        <phone:Pivot Background="{Binding Path=SelectedBackgroundIdx,Converter={StaticResource AutoBackgroundSrc}}">
+            <phone:PivotItem Header="settings">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Background="Black"
+                            Opacity="0.3"
+                            Grid.Row="1" 
+                            Grid.RowSpan="2"/>
+
+                    <Grid Grid.Row="1" Margin="0,10,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <toolkit:ToggleSwitch Header="Location Access"
+                                              FontFamily="Segoe UI"
+                                              Foreground="Wheat"
+                                              Background="#04b384"
+                                              IsChecked="{Binding Path=IsLocationOn, Mode=TwoWay}">
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl Foreground="White" FontFamily="Segoe UI" Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                        </toolkit:ToggleSwitch>
+                        <TextBlock TextWrapping="Wrap"
+                                   Foreground="Wheat"
+                                   Text="We respect your privacy. We may access your location just to provide you with more relevant places address and will not be used elsewhere."
+                                   FontFamily="Segoe UI"
+                                   Margin="10,0,0,0"
+                                   Grid.Row="1"/>
+                        <StackPanel Grid.Row="2"
+                                    Margin="0,10,0,0">
+                            <toolkit:ToggleSwitch Header="Lockscreen provider"
+                                                  FontFamily="Segoe UI"
+                                                  Foreground="Wheat"
+                                                  Background="#04b384"
+                                                  x:Name="LockscreenProvider_Toggle"
+                                                  Unchecked="LockscreenProvider_Toggle_Unchecked"
+                                                  Checked="LockscreenProvider_Toggle_Checked">
+                                <toolkit:ToggleSwitch.HeaderTemplate>
+                                    <DataTemplate>
+                                        <ContentControl Foreground="White" FontFamily="Segoe UI" Content="{Binding}"/>
+                                    </DataTemplate>
+                                </toolkit:ToggleSwitch.HeaderTemplate>
+                            </toolkit:ToggleSwitch>
+                            <HyperlinkButton Content="Select other app as lockscreen provider"                                          
+                                             HorizontalAlignment="Left" 
+                                             Foreground="Wheat"
+                                             FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                             Command="{Binding OpenLockscreenCommand}"
+                                             Visibility="Collapsed"
+                                             x:Name="HyperlinkBtn_Settings">
+                                <HyperlinkButton.DataContext>
+                                    <bindableCommand:CommandSampleViewModel/>
+                                </HyperlinkButton.DataContext>
+                            </HyperlinkButton>
+                        </StackPanel>
+                        <Grid Grid.Row="3" Margin="0,20,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Select background"
+                                       Foreground="White"
+                                       FontFamily="Segoe UI"
+                                       Margin="10,0,0,0"/>
+                            <ListBox x:Name="ListBackgroundItem"
+                                     ItemsSource="{Binding Path=BackgroundSrcList}"
+                                     SelectedIndex="{Binding Path=SelectedBackgroundIdx,Mode=TwoWay}"
+                                     ItemContainerStyle="{StaticResource ListBackgroundItemStyle}"
+                                     Grid.Row="1"
+                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <toolkit:WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </phone:PivotItem>
+            <phone:PivotItem Header="about">
+                <Grid>
+                    <Grid.DataContext>
+                        <bindableCommand:CommandSampleViewModel/>
+                    </Grid.DataContext>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Background="Black" Opacity="0.3" Grid.RowSpan="2"/>
+
+                    <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel>
+                            <TextBlock Text="Amazing Daily Photo" 
+                                       Margin="12,0,12,0" 
+                                       Foreground="White"
+                                       FontSize="{StaticResource PhoneFontSizeLarge}" 
+                                       FontFamily="{StaticResource PhoneFontFamilySemiBold}"/>
+                            <TextBlock Text="1.0.0.0" 
+                                       Foreground="Wheat"
+                                       Margin="12,0,12,0" 
+                                       FontSize="{StaticResource PhoneFontSizeNormal}"/>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1" 
+                                   Text="Take photos of yourself and see how you're growing up day by day. Remember all the first time: first crawl, first birthday, ... Never miss every important event of your life!"
+                                   Margin="12,24,12,24" 
+                                   TextWrapping="Wrap" 
+                                   Foreground="Wheat"
+                                   FontFamily="Segoe UI"
+                                   FontSize="{StaticResource PhoneFontSizeNormal}" />
+                        <HyperlinkButton Grid.Row="2" 
+                                         Content="technical support/feedback email" 
+                                         Margin="0,12,0,0" 
+                                         HorizontalAlignment="Left" 
+                                         Foreground="White"
+                                         FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                         Command="{Binding SendAnEmailCommand}"/>
+                        <HyperlinkButton Grid.Row="3"
+                                         Content="rate this app" 
+                                         Margin="0,12,0,0" 
+                                         HorizontalAlignment="Left" 
+                                         Foreground="White"
+                                         FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                         Command="{Binding RateThisAppCommand}"/>
+                        <StackPanel Grid.Row="4" Margin="12,0,12,50" VerticalAlignment="Bottom">
+                            <TextBlock Text="Copyright" 
+                                       Margin="0,12,0,0" 
+                                       Foreground="White"
+                                       FontSize="{StaticResource PhoneFontSizeNormal}"/>
+                            <TextBlock Foreground="Wheat"
+                                       Text="Little Shrimp" 
+                                       FontSize="{StaticResource PhoneFontSizeNormal}"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </phone:PivotItem>
+        </phone:Pivot>
+    </Grid>
+</phone:PhoneApplicationPage>

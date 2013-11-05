@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="Grow_Up.View.CalendarForRender"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wpcontrols="clr-namespace:WPControls;assembly=WPControls"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="480" d:DesignWidth="480">
+
+    <UserControl.Resources>
+        <Style x:Key="CalendarItemStyle" TargetType="wpcontrols:CalendarItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="wpcontrols:CalendarItem">
+                        <Grid x:Name="OuterGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Border BorderBrush="White"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    BorderThickness="0,0,0,0">
+                                <Grid Height="68.5"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Rectangle Fill="{TemplateBinding Background}" Grid.RowSpan="2"/>
+                                    <TextBlock Text="{Binding Path=DayNumber,RelativeSource={RelativeSource TemplatedParent}}"
+                                               Foreground="{TemplateBinding Foreground}"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Top"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <wpcontrols:Calendar x:Name="Calendar"
+                             CalendarItemStyle="{StaticResource CalendarItemStyle}"
+                             DatesSource="{Binding Path=Dates}"
+                             ColorConverter="{Binding}"
+                             EnableGestures="True"
+                             ShowNavigationButtons="False"
+                             Foreground="White"
+                             FontFamily="Comic Sans MS"/>
+    </Grid>
+</UserControl>

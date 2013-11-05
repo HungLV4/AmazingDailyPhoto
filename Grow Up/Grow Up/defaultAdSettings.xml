@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CultureDescriptors>
+		<AdCultureDescriptor CultureName="en-US">
+      <Probabilities Probability="60" AdType="PubCenter" AppID="9310057b-2519-4b9f-b688-c5e0fb2f555a" SecondaryID="144664" />
+      <Probabilities Probability="10" AdType="AdDuplex" AppID="51371"/>
+      <Probabilities Probability="30" AdType="InnerActive" AppID="LittleShrimp_AmazingDailyPhoto_WP"/>
+      <Probabilities AdType="DefaultHouseAd"/>
+    </AdCultureDescriptor>
+		<AdCultureDescriptor CultureName="en-GB">
+      <Probabilities Probability="60" AdType="PubCenter" AppID="9310057b-2519-4b9f-b688-c5e0fb2f555a" SecondaryID="144664" />
+      <Probabilities Probability="10" AdType="AdDuplex" AppID="51371"/>
+      <Probabilities Probability="30" AdType="InnerActive" AppID="LittleShrimp_AmazingDailyPhoto_WP"/>
+    <Probabilities AdType="DefaultHouseAd"/>
+    </AdCultureDescriptor>
+		<AdCultureDescriptor CultureName="de-DE">
+      <Probabilities Probability="60" AdType="PubCenter" AppID="9310057b-2519-4b9f-b688-c5e0fb2f555a" SecondaryID="144664" />
+      <Probabilities Probability="10" AdType="AdDuplex" AppID="51371"/>
+      <Probabilities Probability="30" AdType="InnerActive" AppID="LittleShrimp_AmazingDailyPhoto_WP"/>
+      <Probabilities AdType="DefaultHouseAd"/>
+    </AdCultureDescriptor>
+		<AdCultureDescriptor CultureName="default">
+      <Probabilities Probability="10" AdType="PubCenter" AppID="9310057b-2519-4b9f-b688-c5e0fb2f555a" SecondaryID="144664" />
+      <Probabilities Probability="30" AdType="AdDuplex" AppID="51371"/>
+      <Probabilities Probability="60" AdType="InnerActive" AppID="LittleShrimp_AmazingDailyPhoto_WP"/>
+      <Probabilities AdType="DefaultHouseAd"/>
+    </AdCultureDescriptor>
+	</CultureDescriptors>
+</AdSettings>
