@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="vi-VN" original="AppResources.resx" tool-id="MultilingualAppToolkit" product-name="Grow Up" product-version="1.0.0.0" build-num="0">
+    <header>
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="2.1.1100.0" tool-company="Microsoft" />
+    </header>
+    <body>
+      <group id="Resx">
+        <trans-unit id="Resx/ResourceFlowDirection" translate="yes" xml:space="preserve">
+          <source>LeftToRight</source>
+          <target state="translated">LeftToRight</target>
+          
+        <note from="MultilingualBuild" annotates="source" priority="2">Controls the FlowDirection for all elements in the RootFrame. Set to the traditional direction of this resource file's language</note></trans-unit>
+        <trans-unit id="Resx/ResourceLanguage" translate="yes" xml:space="preserve">
+          <source>en-US</source>
+          <target state="translated">vi-VN</target>
+          
+        <note from="MultilingualBuild" annotates="source" priority="2">Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</note></trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID9" xml:space="preserve">
+          <source>With Amazing Daily Photo, never miss any important event of your life!</source>
+          <target state="translated">Ghi lại mọi khoảnh khắc cuộc sống với Amazing Daily Photo.</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID8" xml:space="preserve">
+          <source>about</source>
+          <target state="translated">thông tin</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID7" xml:space="preserve">
+          <source>settings</source>
+          <target state="translated">cài đặt</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID6" xml:space="preserve">
+          <source>Location</source>
+          <target state="translated">Địa điểm</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID5" xml:space="preserve">
+          <source>Add caption</source>
+          <target state="translated">Thông tin ảnh</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID4" xml:space="preserve">
+          <source>Add filter</source>
+          <target state="translated">Thêm hiệu ứng</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID3" xml:space="preserve">
+          <source>Generate calendar</source>
+          <target state="translated">Tạo lịch từ ảnh của bạn</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID30" xml:space="preserve">
+          <source>Select photos to upload</source>
+          <target state="translated">Chọn ảnh</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID32" xml:space="preserve">
+          <source>Unable to create Amazing Daily Photo folder in Skydrive</source>
+          <target state="new">Unable to create Amazing Daily Photo folder in Skydrive</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID34" xml:space="preserve">
+          <source>Unselect all</source>
+          <target state="translated">Bỏ chọn tất cả</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID33" xml:space="preserve">
+          <source>Select all</source>
+          <target state="translated">Chọn tất cả</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID31" xml:space="preserve">
+          <source>Unable to connect Skydrive</source>
+          <target state="new">Unable to connect Skydrive</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID2" xml:space="preserve">
+          <source>Settings</source>
+          <target state="translated">Cài đặt</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID21" xml:space="preserve">
+          <source>Please review my app</source>
+          <target state="translated">Đánh giá ứng dụng</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID25" xml:space="preserve">
+          <source>Display in calendar</source>
+          <target state="translated">Hiển thị trong lịch</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID26" xml:space="preserve">
+          <source>Date</source>
+          <target state="translated">Ngày chụp</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID28" xml:space="preserve">
+          <source>Add location</source>
+          <target state="translated">Thêm địa điểm</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID29" xml:space="preserve">
+          <source>Upload to cloud</source>
+          <target state="new">Upload to cloud</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID27" xml:space="preserve">
+          <source>Add #tag</source>
+          <target state="translated">Thêm #tag</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID24" xml:space="preserve">
+          <source>Save</source>
+          <target state="translated">Lưu</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID23" xml:space="preserve">
+          <source>Delete</source>
+          <target state="translated">Xóa</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID22" xml:space="preserve">
+          <source>These themes are not available for trial mode. Would you like to purchase?</source>
+          <target state="new">These themes are not available for trial mode. Would you like to purchase?</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID20" xml:space="preserve">
+          <source>Thank you for using Amazing Daily Photo for a while now, would you like to review this app?</source>
+          <target state="translated">Cảm ơn bạn đã ủng hộ Amazing Daily Photo trong thời gian qua, bạn có muốn cho chúng tôi ý kiến về ứng dụng này?</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID15" xml:space="preserve">
+          <source>Select month and background</source>
+          <target state="translated">Lựa chọn tháng và hình nền</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID19" xml:space="preserve">
+          <source>Image is saved to camera roll</source>
+          <target state="translated">Hình ảnh đã được lưu vào Camera Roll</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID18" xml:space="preserve">
+          <source>Location service is not avaiable.</source>
+          <target state="translated">GPS không phản hồi</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID17" xml:space="preserve">
+          <source>Network is not avaiable</source>
+          <target state="translated">Không kết nối được đến máy chủ địa điểm</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID16" xml:space="preserve">
+          <source>Would you allow the application to use your GPS position?</source>
+          <target state="translated">Cho phép ứng dụng truy cập thông tin GPS của bạn?</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID14" xml:space="preserve">
+          <source>Select other app as lockscreen provider</source>
+          <target state="translated">Lựa chọn ứng dụng khác làm ảnh nền</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID13" xml:space="preserve">
+          <source>We respect your privacy. We may access your location just to provide you with more relevant places address. Your information will not be used for any other purposes.</source>
+          <target state="translated">Chúng tôi tôn trọng quyền riêng tư của bạn. Mọi thông tin GPS chỉ được sử dụng nhằm cung cấp thông tin vị trí chính xác hơn và không được sử dụng với mục đích nào khác.</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID12" xml:space="preserve">
+          <source>Copyright</source>
+          <target state="translated">Bản quyền</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID11" xml:space="preserve">
+          <source>rate this app</source>
+          <target state="translated">đánh giá ứng dụng</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID10" xml:space="preserve">
+          <source>technical support/feedback email</source>
+          <target state="translated">phản hồi cho tác giả</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/TextID1" xml:space="preserve">
+          <source>Search with #tag</source>
+          <target state="translated">Tìm kiếm với #tag</target>
+        </trans-unit>
+        <trans-unit id="Resx/ApplicationTitle" translate="yes" xml:space="preserve">
+          <source>MY APPLICATION</source>
+          <target state="new">MY APPLICATION</target>
+        </trans-unit>
+        <trans-unit translate="yes" id="Resx/ClientId" xml:space="preserve">
+          <source>000000004810A44B</source>
+          <target state="new">000000004810A44B</target>
+        </trans-unit>
+        <trans-unit id="Resx/AppBarButtonText" translate="yes" xml:space="preserve">
+          <source>add</source>
+          <target state="new">add</target>
+        </trans-unit>
+        <trans-unit id="Resx/AppBarMenuItemText" translate="yes" xml:space="preserve">
+          <source>Menu Item</source>
+          <target state="new">Menu Item</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

@@ -1,5 +1,7 @@
 ﻿using Commons;
+using Grow_Up.Helpers;
 using Grow_Up.Model;
+using Microsoft.Live;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,6 +20,7 @@ namespace Grow_Up.ViewModel
     public class VM : INotifyPropertyChanged, IDateToBrushConverter
     {
         public DateDataContext Db;
+        public LiveConnectClient LiveClient;
 
         public VM(string dbConnection)
         {
@@ -32,6 +35,17 @@ namespace Grow_Up.ViewModel
             {
                 _selectedDateData = value;
                 NotifyPropertyChanged("SelectedDateData");
+            }
+        }
+
+        private Entry _selectedEntry;
+        public Entry SelectedEntry
+        {
+            get { return _selectedEntry; }
+            set
+            {
+                _selectedEntry = value;
+                NotifyPropertyChanged("SelectedEntry");
             }
         }
 
@@ -54,6 +68,18 @@ namespace Grow_Up.ViewModel
             {
                 _allEntries = value;
                 NotifyPropertyChanged("AllEntries");
+            }
+        }
+
+        public List<KeyedList<String, Entry>> AllEntriesByDate
+        {
+            get
+            {
+                var groupedEntries = from entry in AllEntries
+                                     orderby entry.Time.Date.ToString("MMMM yyyy")
+                                     group entry by entry.Time.ToString("MMMM yyyy") into entriesByDate
+                                     select new KeyedList<String, Entry>(entriesByDate);
+                return new List<KeyedList<String, Entry>>(groupedEntries);
             }
         }
 
@@ -101,6 +127,10 @@ namespace Grow_Up.ViewModel
             }
         }
 
+        public int ScreenWidth { get; set; }
+        public int ScreenHeight { get; set; }
+        public string SkydriveFolderID { get; set; }
+
         public List<int> BackgroundSrcList
         {
             get { return new List<int> { 0, 1, 2, 3, 4, 5, 6 }; }
@@ -110,8 +140,6 @@ namespace Grow_Up.ViewModel
         {
             get { return new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }; }
         }
-
-
 
         public Brush Convert(DateTime dateTime, bool isSelected, Brush defaultValue, BrushType brushType)
         {
@@ -132,7 +160,7 @@ namespace Grow_Up.ViewModel
 
                         if (date.Entries.Count > 0)
                         {
-                            return new ImageBrush() { ImageSource = date.Entries.First().SmallThumbImage };
+                            return new ImageBrush() { ImageSource = date.Entries.First().SmallThumbImage, Stretch = Stretch.UniformToFill };
                         }
                     }
                 }
@@ -147,7 +175,7 @@ namespace Grow_Up.ViewModel
                     return new SolidColorBrush(Color.FromArgb(255, 29, 161, 222));
                 }
 
-                return new SolidColorBrush(Colors.Transparent);
+                return new SolidColorBrush(Colors.Black) { Opacity = 0.4 };
             }
             else
             {
@@ -155,12 +183,23 @@ namespace Grow_Up.ViewModel
             }
         }
 
+        public void Initialize()
+        {
+            LoadDataFromDb();
+            LoadUserSettings();
+
+            //
+            ScreenWidth = Helpers.ResolutionHelper.GetScreenWidth();
+            ScreenHeight = Helpers.ResolutionHelper.GetScreenHeight();
+            IsTrial = App.LisenceInfo.IsTrial();
+        }
+
         public void SaveChangesToDb()
         {
             Db.SubmitChanges();
         }
 
-        public void LoadUserSettings()
+        private void LoadUserSettings()
         {
             if (!IsolatedStorageSettings.ApplicationSettings.Contains(Constant.SETTING_LOCATION))
             {
@@ -220,7 +259,7 @@ namespace Grow_Up.ViewModel
             }
         }
 
-        public void LoadDataFromDb()
+        private void LoadDataFromDb()
         {
             var entriesInDb = from Entry e in Db.Entries select e;
             AllEntries = new ObservableCollection<Entry>(entriesInDb);

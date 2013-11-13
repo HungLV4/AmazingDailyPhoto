@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Coding4Fun.Toolkit.Controls;
+using Commons;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +18,16 @@ namespace Grow_Up.Helpers
             {
                 App.RootFrame.RemoveBackEntry();
             }
+        }
+
+        public static void ShowToast(string message)
+        {
+            ToastPrompt toast = new ToastPrompt()
+            {
+                Message = message,
+                MillisecondsUntilHidden = Constant.TOAST_TIME_IN_MILISECOND
+            };
+            toast.Show();
         }
     }
 }

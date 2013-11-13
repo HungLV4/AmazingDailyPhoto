@@ -18,6 +18,7 @@ using System.ComponentModel;
 using Microsoft.Phone.Tasks;
 using Microsoft.Phone;
 using System.Windows.Resources;
+using Grow_Up.Resources;
 
 namespace Grow_Up
 {
@@ -127,8 +128,8 @@ namespace Grow_Up
             SetScreenButtonsEnabled(true);
             ToastPrompt toast = new ToastPrompt()
             {
-                Title = "Amazing Daily Photo",
-                Message = "Image is saved to library",
+                Title = "",
+                Message = AppResources.TextID19,
                 ImageSource = new BitmapImage(new Uri("Assets/Tiles/icon_small.png", UriKind.Relative)),
                 MillisecondsUntilHidden = 2000
             };
@@ -141,7 +142,7 @@ namespace Grow_Up
             var index = (int)(sender as Grid).DataContext;
             if (index > 0 && App.ViewModelData.IsTrial)
             {
-                MessageBoxResult result = MessageBox.Show("These themes are not available for trial mode. Would you like to purchase?", "Amazing Daily Photo", MessageBoxButton.OKCancel);
+                MessageBoxResult result = MessageBox.Show(AppResources.TextID22, "Amazing Daily Photo", MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.OK)
                 {
                     MarketplaceDetailTask task = new MarketplaceDetailTask();

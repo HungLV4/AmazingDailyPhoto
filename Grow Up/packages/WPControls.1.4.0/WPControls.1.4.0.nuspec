@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>WPControls</id>
+    <version>1.4.0</version>
+    <title>Windows Phone 7 Calendar Control</title>
+    <authors>Sergey Barskiy</authors>
+    <owners>Sergey Barskiy</owners>
+    <licenseUrl>https://wpcontrols.codeplex.com/license</licenseUrl>
+    <projectUrl>https://wpcontrols.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This package contains calendar cotrol to be used with Windows Phone 7 applications.  Please see project URL for details and sample usage.</description>
+    <summary>This package contains calendar cotrol to be used with Windows Phone 7 applications</summary>
+    <releaseNotes>NuGet version of the calendar control.  Control has been around for 1.5 years now.
+Version 1.4 supports minimum and maximum dates for navigation</releaseNotes>
+    <copyright>Sergey Barskiy 2011-2012</copyright>
+    <language />
+    <tags>Windows Phone;Calendar</tags>
+  </metadata>
+</package>

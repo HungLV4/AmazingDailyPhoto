@@ -14,6 +14,7 @@
     xmlns:slideView="clr-namespace:Telerik.Windows.Controls.SlideView;assembly=Telerik.Windows.Controls.Primitives"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:cv="clr-namespace:Grow_Up.Converters"
+    xmlns:liveControls="clr-namespace:Microsoft.Live.Controls;assembly=Microsoft.Live.Controls"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -22,166 +23,404 @@
     shell:SystemTray.IsVisible="False">
 
     <phone:PhoneApplicationPage.Resources>
-        <cv:StringShorten x:Key="StringShorten"/>
-        <cv:DateTimeToDate x:Key="DateTimeToDate"/>
+        <cv:StringShortenShort x:Key="StringShortenShort"/>
+        <cv:DateTimeToLongDate x:Key="DateTimeToLongDate"/>
         <cv:AutoBackgroundSrc x:Key="AutoBackgroundSrc"/>
-
-        <Style x:Key="PanoramaItemStyle1" TargetType="phone:PanoramaItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="#85898c"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMedium}"/>
+            <Setter Property="Padding" Value="0,20,0,20"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="phone:PanoramaItem">
-                        <Grid Background="{TemplateBinding Background}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <ContentControl x:Name="header" CharacterSpacing="-35" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" FontSize="66" FontFamily="{StaticResource PhoneFontFamilySemiLight}" HorizontalAlignment="Left" Margin="12,-2,0,0">
-                                <ContentControl.RenderTransform>
-                                    <TranslateTransform x:Name="headerTransform"/>
-                                </ContentControl.RenderTransform>
-                            </ContentControl>
-                            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" Grid.Row="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentContainer">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneButtonBasePressedForegroundBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneAccentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentContainer">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>Silver</DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="ButtonBackground" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="0" Margin="0">
+                                <ContentControl x:Name="ContentContainer" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0,0,0,0"/>
+                            </Border>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="TooltipButtonStyle" TargetType="Button">
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+            <Setter Property="Background" Value="#f2f3f7"/>
+            <Setter Property="Foreground" Value="#788ba1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiBold}"/>
+            <Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMedium}"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,10,0,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentContainer">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneButtonBasePressedForegroundBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneAccentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentContainer">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="ButtonBackground" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="10" Margin="0">
+                                <ContentControl x:Name="ContentContainer" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="telerikPrimitives:RadToolTip"
+               x:Key="BaseToolTipStyle">
+            <Setter Property="Background"
+                    Value="Transparent"/>
+            <Setter Property="OpenAnimation">
+                <Setter.Value>
+                    <telerikCore:RadScaleYAnimation StartScaleY="0"
+                                                    EndScaleY="1"
+                                                    AnimationOrigin="0.5, 1"
+                                                    FillBehavior="Stop"
+                                                    Duration="0:0:0.3">
+                        <telerikCore:RadScaleYAnimation.Easing>
+                            <QuadraticEase/>
+                        </telerikCore:RadScaleYAnimation.Easing>
+                    </telerikCore:RadScaleYAnimation>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="CloseAnimation">
+                <Setter.Value>
+                    <telerikCore:RadFadeAnimation StartOpacity="1"
+                                                  EndOpacity="0"
+                                                  FillBehavior="Stop"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="CameraTooltipTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <telerikPrimitives:RadImageButton PressedStateImageSource="Assets/camera_circle.png"
+                                                  RestStateImageSource="Assets/camera_circle.png"
+                                                  ButtonShape="Image"
+                                                  Click="CameraTakeBtn_Click"/>
+                <telerikPrimitives:RadImageButton PressedStateImageSource="Assets/gallery_circle.png"
+                                                  RestStateImageSource="Assets/gallery_circle.png"
+                                                  ButtonShape="Image"
+                                                  Click="ChoosePhotoBtn_Click"
+                                                  Grid.Row="1"/>
+            </Grid>
+        </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
-        <views:PanoramaFullScreen x:Name="PanoramaRoot"
-                                  HorizontalAlignment="Left"
-                                  Background="{Binding Path=SelectedBackgroundIdx,Converter={StaticResource AutoBackgroundSrc}}">
-            <phone:PanoramaItem CacheMode="{x:Null}" 
-                                Style="{StaticResource PanoramaItemStyle1}">
-                <Grid x:Name="CalendarGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+        <Grid x:Name="SettingsPanel"
+              Width="380"
+              HorizontalAlignment="Left"
+              Background="#e8e8e8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <telerikInput:RadAutoCompleteBox x:Name="SearchAutoCompleteBox"
+                                                 AutoCompletePopupDisplayMode="BelowTextBox"
+                                                 AutoCompleteMode="Contains"
+                                                 AutoCompletePopupCloseMode="OnBackKeyPress"
+                                                 SuggestionsSource="{Binding AllEntries}"
+                                                 FilterKeyPath="Note"
+                                                 Watermark="Search for #tag"
+                                                 HideWatermarkOnFocus="True"
+                                                 SuggestionSelected="SearchAutoCompleteBox_SuggestionSelected"
+                                                 VerticalAlignment="Top"
+                                                 ExecuteActionOnReturn="True"
+                                                 BorderThickness="0,0,0,1"
+                                                 Height="65"
+                                                 BorderBrush="Red"
+                                                 Grid.Row="1"
+                                                 ActionButtonVisibility="Visible"
+                                                 ClearButtonVisibility="Visible"
+                                                 Background="White"
+                                                 Foreground="#85898c"
+                                                 FontFamily="Segoe UI"
+                                                 FontSize="{StaticResource PhoneFontSizeMedium}"
+                                                 Template="{StaticResource RadAutoCompleteBoxControlTemplate}">
+                    <telerikInput:RadAutoCompleteBox.PopupStyle>
+                        <Style TargetType="autoComplete:AutoCompleteItemsControl">
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </telerikInput:RadAutoCompleteBox.PopupStyle>
+                    <telerikInput:RadAutoCompleteBox.SuggestionItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{Binding Path=SmallThumbImage}"
+                                       Margin="{StaticResource PhoneHorizontalMargin}"
+                                       Width="48" Height="48"
+                                       Grid.RowSpan="2"/>
+                                <TextBlock Text="{Binding Path=Note,Converter={StaticResource StringShortenShort}}"
+                                           Grid.Column="1" 
+                                           telerikInput:RadAutoCompleteBox.IsElementHighlighted="True"
+                                           FontSize="{StaticResource PhoneFontSizeMedium}">
+                                <telerikInput:RadAutoCompleteBox.HighlightStyle>
+                                    <telerikInput:HighlightStyle Foreground="#3BB23B"/>
+                                </telerikInput:RadAutoCompleteBox.HighlightStyle>
+                                </TextBlock>
+                                <TextBlock Text="{Binding Path=Time,Converter={StaticResource DateTimeToDate}}"
+                                           Grid.Column="1"
+                                           Grid.Row="1"
+                                           FontSize="{StaticResource PhoneFontSizeSmall}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </telerikInput:RadAutoCompleteBox.SuggestionItemTemplate>
+                </telerikInput:RadAutoCompleteBox>
+            </Grid>
+            <Grid Grid.Row="1"
+                  Background="White"
+                  VerticalAlignment="Center"
+                  Margin="0,20,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="76"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="/Assets/calendar.png" 
+                       Stretch="UniformToFill"/>
+                <Image Source="/Assets/feature.settings.png"
+                       Stretch="UniformToFill"
+                       Grid.Row="1"/>
+                <Image Source="/Assets/upload.png"
+                       Stretch="UniformToFill"
+                       Grid.Row="2"
+                       Visibility="Collapsed"
+                       x:Name="UploadImage"/>
+                <Button x:Name="GenerateBtn"
+                        BorderThickness="0,0,0,1"
+                        BorderBrush="#85898c"
+                        Content="{Binding Path=LocalizedResources.TextID3, Source={StaticResource LocalizedStrings}}"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Click="Generate_Btn_Click"
+                        Grid.Column="1"/>
+                <Button x:Name="SettingsBtn"
+                        BorderThickness="0,0,0,0"
+                        BorderBrush="#85898c"
+                        Content="{Binding Path=LocalizedResources.TextID2, Source={StaticResource LocalizedStrings}}"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Click="Setting_Btn_Click"
+                        Grid.Column="1"
+                        Grid.Row="1"/>
+                <Button x:Name="UploadBtn"
+                        IsEnabled="False"
+                        Visibility="Collapsed"
+                        BorderThickness="0"
+                        Content="{Binding  Path=LocalizedResources.TextID29, Source={StaticResource LocalizedStrings}}"
+                        Click="Upload_Btn_Click"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Grid.Column="1"
+                        Grid.Row="2"/>
+            </Grid>
+            <Grid Grid.Row="2" 
+                  VerticalAlignment="Bottom"
+                  Margin="10,0,10,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image x:Name="ImageProfilePicture"
+                       MaxHeight="96"
+                       MaxWidth="96"/>
+                <liveControls:SignInButton Grid.Column="1"
+                                           x:Name="SignInBtn"
+                                           Branding="Skydrive"
+                                           ClientId="{Binding Path=LocalizedResources.ClientId, Source={StaticResource LocalizedStrings}}"
+                                           Scopes="wl.signin wl.skydrive wl.skydrive_update"
+                                           SessionChanged="skydrive_SessionChanged"
+                                           BorderThickness="0"
+                                           Foreground="#094AB2"
+                                           Visibility="Collapsed"/>
+            </Grid>
+        </Grid>
 
-                    <Border Grid.Row="1"
-                            Grid.RowSpan="2"
-                            Background="Black" Opacity="0.3"/>
+        <Grid x:Name="ContentPanel" Visibility="Visible"
+              Background="{Binding Path=SelectedBackgroundIdx,Converter={StaticResource AutoBackgroundSrc}}">
+            <Grid x:Name="CalendarGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                    <views:CalendarView x:Name="CalendarViewOnPage"
-                                        DataContext="{Binding}"
-                                        Grid.Row="1"/>
-                    <views:ImageSlideView x:Name="DateViewOnPage"
-                                          DataContext="{Binding Path=SelectedDateData}"
-                                          Grid.Row="2"
-                                          Margin="0,0,0,72"/>
-                    <telerikPrimitives:RadWindow x:Name="PhotoViewer"
-                                                 IsFullScreen="True">
-                        <telerikPrimitives:RadWindow.OpenAnimation>
-                            <telerikCore:RadScaleAnimation FillBehavior="Stop">
-                                <telerikCore:RadScaleAnimation.Easing>
-                                    <CubicEase EasingMode="EaseIn"/>
-                                </telerikCore:RadScaleAnimation.Easing>
-                            </telerikCore:RadScaleAnimation>
-                        </telerikPrimitives:RadWindow.OpenAnimation>
+                <Border Grid.RowSpan="3"
+                        Background="Black"
+                        Opacity="0.3"
+                        BorderThickness="5,0,0,0"
+                        BorderBrush="Black">
+                    <toolkit:GestureService.GestureListener>
+                        <toolkit:GestureListener DragDelta="GestureListener_DragDelta"
+                                                 DragCompleted="GestureListener_DragCompleted"/>
+                    </toolkit:GestureService.GestureListener>
+                </Border>
 
-                        <telerikPrimitives:RadWindow.CloseAnimation>
-                            <telerikCore:RadMoveAnimation FillBehavior="Stop" 
-                                                          MoveDirection="LeftOut"
-                                                          Duration="0:0:0.2">
-                                <telerikCore:RadMoveAnimation.Easing>
-                                    <CubicEase EasingMode="EaseIn"/>
-                                </telerikCore:RadMoveAnimation.Easing>
-                            </telerikCore:RadMoveAnimation>
-                        </telerikPrimitives:RadWindow.CloseAnimation>
-                        <Grid VerticalAlignment="Center"
-                              HorizontalAlignment="Center">
+                <Grid Background="#04b384">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="Assets/options.png"
+                           Stretch="None"
+                           Tap="Menu_Btn_Tapped"/>
+					<Border Height="65" Grid.Column="1">
+						<TextBlock Text="Amazing Daily Photo"
+								   Style="{StaticResource GrowUpHeaderText}"
+								   VerticalAlignment="Center" 
+								   HorizontalAlignment="Center"/>
+					</Border>
+                    <Image Source="Assets/camera.png"
+                           Grid.Column="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Stretch="None"
+                           telerikPrimitives:RadToolTipService.Template="{StaticResource CameraTooltipTemplate}"
+                           telerikPrimitives:RadToolTipService.Style="{StaticResource BaseToolTipStyle}"
+                           telerikPrimitives:RadToolTipService.ShowGesture="Tap"
+                           telerikPrimitives:RadToolTipService.ToolTip="{Binding}"/>
+                </Grid>
+                <views:CalendarView x:Name="CalendarViewOnPage"
+                                    DataContext="{Binding}"
+                                    Grid.Row="1"/>
+                <views:ImageSlideView x:Name="DateViewOnPage"
+                                      DataContext="{Binding Path=SelectedDateData}"
+                                      Grid.Row="2"
+                                      Margin="0,10,0,5"/>
+                
+                <telerikPrimitives:RadWindow x:Name="PhotoViewer"
+                                             IsFullScreen="True">
+                    <telerikPrimitives:RadWindow.OpenAnimation>
+                        <telerikCore:RadScaleAnimation FillBehavior="Stop">
+                            <telerikCore:RadScaleAnimation.Easing>
+                                <CubicEase EasingMode="EaseIn"/>
+                            </telerikCore:RadScaleAnimation.Easing>
+                        </telerikCore:RadScaleAnimation>
+                    </telerikPrimitives:RadWindow.OpenAnimation>
+
+                    <telerikPrimitives:RadWindow.CloseAnimation>
+                        <telerikCore:RadMoveAnimation FillBehavior="Stop" 
+                                                      MoveDirection="LeftOut"
+                                                      Duration="0:0:0.2">
+                            <telerikCore:RadMoveAnimation.Easing>
+                                <CubicEase EasingMode="EaseIn"/>
+                            </telerikCore:RadMoveAnimation.Easing>
+                        </telerikCore:RadMoveAnimation>
+                    </telerikPrimitives:RadWindow.CloseAnimation>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
                             <Image x:Name="PanZoomImageViewer"
-                                   Stretch="Fill"
+                                   Stretch="UniformToFill"
                                    Width="480"
-                                   Height="480"/>
+                                   Height="480" />
+                            <TextBox Text="{Binding SelectedEntry.Note,Mode=TwoWay}"
+                                     Grid.Row="1"
+                                     HorizontalAlignment="Left"
+                                     Margin="0,20,0,0"
+                                     TextWrapping="Wrap"
+                                     Style="{StaticResource TransparentTextBoxStyle}"/>
+                        <TextBlock Text="{Binding SelectedEntry.Time,Converter={StaticResource DateTimeToLongDate}}"
+                                       Grid.Row="2"
+                                       HorizontalAlignment="Left"
+                                       Margin="20,0,0,0"
+                                       FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                       Foreground="#04b384"/>
+                            <TextBox Text="{Binding SelectedEntry.Location,Mode=TwoWay}"
+                                     Grid.Row="3"
+                                     HorizontalAlignment="Right"
+                                     Margin="0,0,20,0"
+                                     TextWrapping="Wrap"
+                                     Style="{StaticResource TransparentTextBoxStyle}"/>
                         </Grid>
-                    </telerikPrimitives:RadWindow>
-                </Grid>
-            </phone:PanoramaItem>
-            <phone:PanoramaItem CacheMode="{x:Null}"
-                                Style="{StaticResource PanoramaItemStyle1}">
-                <Grid>
-                    <Grid.Background>
-                        <ImageBrush ImageSource="/Assets/search_bg.png"/>
-                    </Grid.Background>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Border Grid.RowSpan="3"
-                            Background="Black" Opacity="0.3"/>
-
-                    <telerikInput:RadAutoCompleteBox x:Name="SearchAutoCompleteBox"
-                                                     AutoCompletePopupDisplayMode="BelowTextBox"
-                                                     AutoCompleteMode="Contains"
-                                                     AutoCompletePopupCloseMode="OnBackKeyPress"
-                                                     SuggestionsSource="{Binding AllEntries}"
-                                                     FilterKeyPath="Note"
-                                                     HideWatermarkOnFocus="True"
-                                                     SuggestionSelected="SearchAutoCompleteBox_SuggestionSelected"
-                                                     Height="80"
-                                                     Grid.Row="1">
-                        <telerikInput:RadAutoCompleteBox.Style>
-                            <Style TargetType="telerikInput:RadAutoCompleteBox">
-                                <Setter Property="BorderThickness" Value="1"/>
-                                <Setter Property="ClearButtonVisibility" Value="Visible"/>
-                                <Setter Property="Background" Value="LightGray"/>
-                            </Style>
-                        </telerikInput:RadAutoCompleteBox.Style>
-                        <telerikInput:RadAutoCompleteBox.PopupStyle>
-                            <Style TargetType="autoComplete:AutoCompleteItemsControl">
-                                <Setter Property="BorderThickness" Value="0"/>
-                            </Style>
-                        </telerikInput:RadAutoCompleteBox.PopupStyle>
-                        <telerikInput:RadAutoCompleteBox.SuggestionItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Image Source="{Binding Path=SmallThumbImage}"
-                                           Margin="{StaticResource PhoneHorizontalMargin}"
-                                           Width="48" Height="48"
-                                           Grid.RowSpan="2"/>
-                                    <TextBlock Text="{Binding Path=Note,Converter={StaticResource StringShorten}}"
-                                               Grid.Column="1" 
-                                               telerikInput:RadAutoCompleteBox.IsElementHighlighted="True"
-                                               FontSize="{StaticResource PhoneFontSizeMedium}">
-                                        <telerikInput:RadAutoCompleteBox.HighlightStyle>
-                                            <telerikInput:HighlightStyle Foreground="#3BB23B"/>
-                                        </telerikInput:RadAutoCompleteBox.HighlightStyle>
-                                    </TextBlock>
-                                    <TextBlock Text="{Binding Path=Time,Converter={StaticResource DateTimeToDate}}"
-                                               Grid.Column="1"
-                                               Grid.Row="1"
-                                               FontSize="{StaticResource PhoneFontSizeSmall}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </telerikInput:RadAutoCompleteBox.SuggestionItemTemplate>
-                    </telerikInput:RadAutoCompleteBox>
-                </Grid>
-            </phone:PanoramaItem>
-        </views:PanoramaFullScreen>
+                </telerikPrimitives:RadWindow>
+            </Grid>
+        </Grid>
     </Grid>
-
-    <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar Opacity="0">
-            <shell:ApplicationBarIconButton IconUri="Assets/feature.calendar.png" Text="|" Click="Generate_Btn_Click"/>
-            <shell:ApplicationBarIconButton IconUri="Assets/feature.camera.png" Text="|" Click="Add_Btn_Click"/>
-            <shell:ApplicationBarIconButton IconUri="Assets/feature.settings.png" Text="|" Click="Setting_Btn_Click"/>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

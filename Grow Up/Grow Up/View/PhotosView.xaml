@@ -13,7 +13,7 @@
     d:DesignHeight="480" d:DesignWidth="480">
 
     <UserControl.Resources>
-        <cv:DateTimeToDate x:Key="DateTimeToDate"/>
+        <cv:DateTimeToLongDate x:Key="DateTimeToDate"/>
 
         <!--<Style x:Key="JumpListStyle" TargetType="toolkit:LongListMultiSelector">
             <Setter Property="Margin" Value="12,12,0,0"/>

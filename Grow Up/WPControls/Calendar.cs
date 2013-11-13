@@ -754,7 +754,7 @@ namespace WPControls
             IncrementMonth();
         }
 
-        private void IncrementMonth()
+        public void IncrementMonth()
         {
             if (CanMoveToMonthYear(_year, _month + 1))
             {
@@ -773,7 +773,7 @@ namespace WPControls
             DecrementMonth();
         }
 
-        private void DecrementMonth()
+        public void DecrementMonth()
         {
             if (CanMoveToMonthYear(_year, _month - 1))
             {

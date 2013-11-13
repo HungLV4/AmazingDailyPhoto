@@ -28,8 +28,7 @@ namespace Grow_Up
         public static FiltersModel FiltersModel { get; private set; }
         public static PhotoModel PhotoModel { get; set; }
         public static PhotoModel ThumbnailModel { get; set; }
-        public Microsoft.Phone.Marketplace.LicenseInformation lisence = new Microsoft.Phone.Marketplace.LicenseInformation();
-
+        public static Microsoft.Phone.Marketplace.LicenseInformation LisenceInfo = new Microsoft.Phone.Marketplace.LicenseInformation();
         /// <summary>
         /// Constructor for the Application object.
         /// </summary>
@@ -75,9 +74,7 @@ namespace Grow_Up
                 }
             }
             ViewModelData = new VM(Constant.DBConnectionString);
-            ViewModelData.LoadDataFromDb();
-
-            ViewModelData.LoadUserSettings();
+            ViewModelData.Initialize();
         }
 
         // Code to execute when the application is launching (eg, from Start)
@@ -85,8 +82,6 @@ namespace Grow_Up
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
             FiltersModel = new FiltersModel();
-
-            ViewModelData.IsTrial = lisence.IsTrial();
 
             IsolatedStorageSettings.ApplicationSettings["askforreview"] = false;
             int started = 0;
@@ -120,7 +115,7 @@ namespace Grow_Up
                     System.Diagnostics.Debug.WriteLine("Unable to restore photo model: " + ex.Message);
                 }
 
-                ViewModelData.IsTrial = lisence.IsTrial();
+                ViewModelData.IsTrial = LisenceInfo.IsTrial();
             }
         }
 

@@ -50,6 +50,6 @@
                              EnableGestures="True"
                              ShowNavigationButtons="False"
                              Foreground="White"
-                             FontFamily="Comic Sans MS"/>
+                             FontFamily="Segoe UI"/>
     </Grid>
 </UserControl>

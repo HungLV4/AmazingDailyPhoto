@@ -22,7 +22,9 @@ namespace Grow_Up
 {
     public partial class FilterPreviewPage : PhoneApplicationPage
     {
-        int _dateIndex = -1;
+        string _dateIndex = String.Empty;
+        string _dateTaken = String.Empty;
+        bool _shouldCrop = true;
 
         public FilterPreviewPage()
         {
@@ -35,21 +37,18 @@ namespace Grow_Up
         {
             base.OnNavigatedTo(e);
 
-            string index;
-            NavigationContext.QueryString.TryGetValue("index", out index);
-            try
-            {
-                if (index != null) _dateIndex = int.Parse(index);
-            }
-            catch (Exception) { }
+            NavigationContext.QueryString.TryGetValue("index", out _dateIndex);
+            NavigationContext.QueryString.TryGetValue("dateTaken", out _dateTaken);
 
-            if (_dateIndex == -1)
+            string shouldCrop = String.Empty;
+            NavigationContext.QueryString.TryGetValue("shouldCrop", out shouldCrop);
+            if (shouldCrop != null && !shouldCrop.Equals(String.Empty))
             {
-                OSHelper.RemoveAllBackStackButFirst();
-                if (NavigationService.CanGoBack)
+                try
                 {
-                    NavigationService.GoBack();
+                    _shouldCrop = int.Parse(shouldCrop) == Constant.SQUARE_MODE ? true : false;
                 }
+                catch (Exception) { }
             }
         }
 
@@ -58,7 +57,7 @@ namespace Grow_Up
             ProgressIndicator.IsRunning = true;
 
             App.ThumbnailModel.UndoAllFilters();
-            App.ThumbnailModel.ApplyFilter(new NoFilterModel());
+            App.ThumbnailModel.ApplyFilter(new NoFilterModel(), _shouldCrop);
             App.ThumbnailModel.Dirty = true;
 
             WriteableBitmap photo = new WriteableBitmap((int)App.ThumbnailModel.Width, (int)App.ThumbnailModel.Height);
@@ -142,7 +141,7 @@ namespace Grow_Up
                         SetScreenButtonsEnabled(false);
 
                         App.ThumbnailModel.UndoAllFilters();
-                        App.ThumbnailModel.ApplyFilter(filter);
+                        App.ThumbnailModel.ApplyFilter(filter, _shouldCrop);
                         App.ThumbnailModel.Dirty = true;
 
                         WriteableBitmap photo = new WriteableBitmap((int)App.ThumbnailModel.Width, (int)App.ThumbnailModel.Height);
@@ -168,12 +167,13 @@ namespace Grow_Up
 
             var filter = App.ThumbnailModel.AppliedFilters.Count > 0 ? App.ThumbnailModel.AppliedFilters.Last() : new NoFilterModel();
             //apply filter for real model here
-            App.PhotoModel.ApplyFilter(filter);
+            App.PhotoModel.ApplyFilter(filter, _shouldCrop);
             App.PhotoModel.Dirty = true;
 
             ProgressIndicator.IsRunning = false;
             SetScreenButtonsEnabled(true);
-            NavigationService.Navigate(new Uri(String.Format("/AddMetaDataPage.xaml?index={0}", _dateIndex), UriKind.Relative));
+
+            NavigationService.Navigate(new Uri(String.Format("/AddMetaDataPage.xaml?index={0}&dateTaken={1}", _dateIndex, _dateTaken), UriKind.Relative));
         }
 
         private void SetScreenButtonsEnabled(bool enabled)

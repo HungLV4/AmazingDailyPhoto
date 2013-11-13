@@ -28,7 +28,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{TemplateBinding YearMonthLabel}" FontSize="{StaticResource PhoneFontSizeExtraLarge}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="{TemplateBinding YearMonthLabel}" FontSize="{StaticResource PhoneFontSizeLarge}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Button 
                             Content="&lt;" 
                             Width="100" 

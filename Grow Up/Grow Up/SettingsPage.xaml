@@ -64,7 +64,7 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
         <phone:Pivot Background="{Binding Path=SelectedBackgroundIdx,Converter={StaticResource AutoBackgroundSrc}}">
-            <phone:PivotItem Header="settings">
+            <phone:PivotItem Header="{Binding Path=LocalizedResources.TextID7, Source={StaticResource LocalizedStrings}}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -97,7 +97,7 @@
                         </toolkit:ToggleSwitch>
                         <TextBlock TextWrapping="Wrap"
                                    Foreground="Wheat"
-                                   Text="We respect your privacy. We may access your location just to provide you with more relevant places address and will not be used elsewhere."
+                                   Text="{Binding Path=LocalizedResources.TextID13, Source={StaticResource LocalizedStrings}}"
                                    FontFamily="Segoe UI"
                                    Margin="10,0,0,0"
                                    Grid.Row="1"/>
@@ -116,7 +116,7 @@
                                     </DataTemplate>
                                 </toolkit:ToggleSwitch.HeaderTemplate>
                             </toolkit:ToggleSwitch>
-                            <HyperlinkButton Content="Select other app as lockscreen provider"                                          
+                            <HyperlinkButton Content="{Binding Path=LocalizedResources.TextID14, Source={StaticResource LocalizedStrings}}"                                          
                                              HorizontalAlignment="Left" 
                                              Foreground="Wheat"
                                              FontSize="{StaticResource PhoneFontSizeNormal}" 
@@ -154,7 +154,7 @@
                     </Grid>
                 </Grid>
             </phone:PivotItem>
-            <phone:PivotItem Header="about">
+            <phone:PivotItem Header="{Binding Path=LocalizedResources.TextID8, Source={StaticResource LocalizedStrings}}">
                 <Grid>
                     <Grid.DataContext>
                         <bindableCommand:CommandSampleViewModel/>
@@ -181,35 +181,35 @@
                                        Foreground="White"
                                        FontSize="{StaticResource PhoneFontSizeLarge}" 
                                        FontFamily="{StaticResource PhoneFontFamilySemiBold}"/>
-                            <TextBlock Text="1.0.0.0" 
+                            <TextBlock Text="1.2.1.4" 
                                        Foreground="Wheat"
                                        Margin="12,0,12,0" 
                                        FontSize="{StaticResource PhoneFontSizeNormal}"/>
                         </StackPanel>
 
                         <TextBlock Grid.Row="1" 
-                                   Text="Take photos of yourself and see how you're growing up day by day. Remember all the first time: first crawl, first birthday, ... Never miss every important event of your life!"
+                                   Text="{Binding Path=LocalizedResources.TextID9, Source={StaticResource LocalizedStrings}}"
                                    Margin="12,24,12,24" 
                                    TextWrapping="Wrap" 
                                    Foreground="Wheat"
                                    FontFamily="Segoe UI"
                                    FontSize="{StaticResource PhoneFontSizeNormal}" />
                         <HyperlinkButton Grid.Row="2" 
-                                         Content="technical support/feedback email" 
+                                         Content="{Binding Path=LocalizedResources.TextID10, Source={StaticResource LocalizedStrings}}" 
                                          Margin="0,12,0,0" 
                                          HorizontalAlignment="Left" 
                                          Foreground="White"
                                          FontSize="{StaticResource PhoneFontSizeNormal}" 
                                          Command="{Binding SendAnEmailCommand}"/>
                         <HyperlinkButton Grid.Row="3"
-                                         Content="rate this app" 
+                                         Content="{Binding Path=LocalizedResources.TextID11, Source={StaticResource LocalizedStrings}}" 
                                          Margin="0,12,0,0" 
                                          HorizontalAlignment="Left" 
                                          Foreground="White"
                                          FontSize="{StaticResource PhoneFontSizeNormal}" 
                                          Command="{Binding RateThisAppCommand}"/>
                         <StackPanel Grid.Row="4" Margin="12,0,12,50" VerticalAlignment="Bottom">
-                            <TextBlock Text="Copyright" 
+                            <TextBlock Text="{Binding Path=LocalizedResources.TextID12, Source={StaticResource LocalizedStrings}}" 
                                        Margin="0,12,0,0" 
                                        Foreground="White"
                                        FontSize="{StaticResource PhoneFontSizeNormal}"/>

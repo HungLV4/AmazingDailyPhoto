@@ -16,38 +16,45 @@ using Microsoft.Phone.Shell;
 using Models;
 using Commons;
 using Microsoft.Phone.Tasks;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Media.PhoneExtensions;
+using Telerik.Windows.Controls;
 
 namespace Grow_Up
 {
     public partial class PhotoCapturePage : PhoneApplicationPage
     {
-        int _dateIndex = -1;
         private PhotoCaptureDevice _photoCaptureDevice = null;
         private bool _capturing = false;
+        string _dateIndex = String.Empty;
+
+        int _sizeMode = Constant.NORMAL_MODE;
+        bool _flashEnabled = true;
 
         public PhotoCapturePage()
         {
             InitializeComponent();
+
+            LoopingListDataSource photoModes = new LoopingListDataSource(2);
+            photoModes.ItemNeeded += photoModes_ItemNeeded;
+            photoModes.ItemUpdated += photoModes_ItemUpdated;
+            PhotoModeList.DataSource = photoModes;
+            PhotoModeList.SelectedIndex = 0;
+        }
+
+        void photoModes_ItemUpdated(object sender, LoopingListDataItemEventArgs e)
+        {
+            (e.Item as ModeItem).Name = e.Index % 2 == 0 ? "NORMAL" : "SQUARE";
+        }
+
+        void photoModes_ItemNeeded(object sender, LoopingListDataItemEventArgs e)
+        {
+            e.Item = new ModeItem() { Name = e.Index % 2 == 0 ? "NORMAL" : "SQUARE" };
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            string index;
-            NavigationContext.QueryString.TryGetValue("index", out index);
-            try
-            {
-                if (index != null) _dateIndex = int.Parse(index);
-            }
-            catch (Exception) { }
-
-            if (_dateIndex == -1)
-            {
-                OSHelper.RemoveAllBackStackButFirst();
-                if (NavigationService.CanGoBack)
-                {
-                    NavigationService.GoBack();
-                }
-            }
+            NavigationContext.QueryString.TryGetValue("index", out _dateIndex);
 
             if (_photoCaptureDevice != null)
             {
@@ -67,15 +74,7 @@ namespace Grow_Up
             SetScreenButtonsEnabled(true);
             SetCameraButtonsEnabled(true);
 
-            SetOrientation(this.Orientation);
-
             base.OnNavigatedTo(e);
-        }
-
-        private async void Capture_Btn_Click(object sender, EventArgs e)
-        {
-            await AutoFocus();
-            await Capture();
         }
 
         /// <summary>
@@ -109,31 +108,8 @@ namespace Grow_Up
 
             if (goToPreview)
             {
-                if (App.PhotoModel != null)
-                {
-                    App.PhotoModel.Dispose();
-                    App.PhotoModel = null;
-                    GC.Collect();
-                }
-                if (App.ThumbnailModel != null)
-                {
-                    App.ThumbnailModel.Dispose();
-                    App.ThumbnailModel = null;
-                    GC.Collect();
-                }
-
-                App.PhotoModel = new PhotoModel() { Buffer = photoStream.GetWindowsRuntimeBuffer() };
-                App.PhotoModel.Captured = true;
-                App.PhotoModel.Dirty = true;
-
-                App.ThumbnailModel = new PhotoModel() { Buffer = thumbnailStream.GetWindowsRuntimeBuffer() };
-                App.ThumbnailModel.Captured = true;
-                App.ThumbnailModel.Dirty = true;
-
-                photoStream.Dispose();
-                thumbnailStream.Dispose();
-
-                NavigationService.Navigate(new Uri(String.Format("/FilterPreviewPage.xaml?index={0}", _dateIndex), UriKind.Relative));
+                NokiaImaginHelper.PreparePhoto(photoStream, thumbnailStream);
+                NavigationService.Navigate(new Uri(String.Format("/FilterPreviewPage.xaml?index={0}&shouldCrop={1}", _dateIndex, _sizeMode), UriKind.Relative));
             }
         }
 
@@ -203,10 +179,7 @@ namespace Grow_Up
 
         private void SetScreenButtonsEnabled(bool enabled)
         {
-            foreach (ApplicationBarIconButton b in ApplicationBar.Buttons)
-            {
-                b.IsEnabled = enabled;
-            }
+            CaptureBtn.IsHitTestVisible = enabled;
         }
 
         /// <summary>
@@ -255,6 +228,17 @@ namespace Grow_Up
             await device.SetPreviewResolutionAsync(previewResolution);
 
             _photoCaptureDevice = device;
+
+            IReadOnlyList<object> supportedFlashmodes = PhotoCaptureDevice.GetSupportedPropertyValues(CameraSensorLocation.Back, KnownCameraPhotoProperties.FlashMode);
+            if (supportedFlashmodes.Count > 1)
+            {
+                _photoCaptureDevice.SetProperty(KnownCameraPhotoProperties.FlashMode, FlashMode.Off);
+            }
+            else
+            {
+                TxtBlock_Flash.Visibility = Visibility.Collapsed;
+            }
+
             SetOrientation(this.Orientation);
         }
 
@@ -267,27 +251,29 @@ namespace Grow_Up
         private void SetOrientation(PageOrientation orientation)
         {
             int videoBrushTransformRotation = 0;
-            int videoCanvasDimension = 480;
-
-            Thickness videoCanvasMargin = new Thickness(-60, 0, 0, 0);
 
             // Orientation.specific changes to default values
             if (orientation == PageOrientation.PortraitUp)
             {
                 videoBrushTransformRotation = 90;
-                videoCanvasMargin = new Thickness(0, -20, 0, 0);
             }
             else if (orientation == PageOrientation.LandscapeRight)
             {
                 videoBrushTransformRotation = 180;
-                videoCanvasMargin = new Thickness(60, 0, 0, 0);
             }
 
             // Set correct values
+            if (_sizeMode == Constant.SQUARE_MODE)
+            {
+                VideoCanvas.Width = VideoCanvas.Height = 480.0;
+            }
+            else
+            {
+                VideoCanvas.Width = 480;
+                VideoCanvas.Height = 640;
+            }
+
             VideoBrushTransform.Rotation = videoBrushTransformRotation;
-            VideoCanvas.Width = videoCanvasDimension;
-            VideoCanvas.Height = videoCanvasDimension;
-            VideoCanvas.Margin = videoCanvasMargin;
 
             if (_photoCaptureDevice != null)
             {
@@ -296,5 +282,53 @@ namespace Grow_Up
                     VideoBrushTransform.Rotation);
             }
         }
+
+        private void FlashMode_Tapped(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (_flashEnabled)
+                TxtBlock_Flash.Text = "FLASH OFF";
+            else
+                TxtBlock_Flash.Text = "FLASH ON";
+
+            _flashEnabled = !_flashEnabled;
+
+            if (_photoCaptureDevice != null)
+            {
+                _photoCaptureDevice.SetProperty(
+                    KnownCameraPhotoProperties.FlashMode,
+                    _flashEnabled ? FlashMode.On : FlashMode.Off);
+            }
+        }
+
+        private async void CaptureBtn_Clicked(object sender, RoutedEventArgs e)
+        {
+            await AutoFocus();
+            await Capture();
+        }
+
+        private void PhotoModeList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _sizeMode = PhotoModeList.SelectedIndex % 2 == 0 ? Constant.NORMAL_MODE : Constant.SQUARE_MODE;
+            if (_sizeMode == Constant.NORMAL_MODE)
+            {
+                BackgroundVideoBrush.Stretch = System.Windows.Media.Stretch.Fill;
+            }
+            else
+            {
+                BackgroundVideoBrush.Stretch = System.Windows.Media.Stretch.UniformToFill;
+            }
+
+            SetOrientation(this.Orientation);
+        }
+    }
+
+    class ModeItem : LoopingListDataItem
+    {
+        public ModeItem()
+        {
+
+        }
+
+        public String Name { get; set; }
     }
 }

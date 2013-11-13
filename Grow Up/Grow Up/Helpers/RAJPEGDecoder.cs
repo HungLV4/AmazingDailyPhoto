@@ -111,8 +111,6 @@ namespace Grow_Up.Helpers
                 {
                     outputSize = new Size(output.Width, output.Height);
 
-
-
                     outputBitmapHR = new WriteableBitmap(
                         (int)(output.Width * System.Windows.Application.Current.Host.Content.ScaleFactor / 100.0f),
                         (int)(output.Height * System.Windows.Application.Current.Host.Content.ScaleFactor / 100.0f)
@@ -366,9 +364,6 @@ namespace Grow_Up.Helpers
                     arg.PinchManipulation.Current.PrimaryContact.X - arg.PinchManipulation.Original.PrimaryContact.X,
                     arg.PinchManipulation.Current.PrimaryContact.Y - arg.PinchManipulation.Original.PrimaryContact.Y);
 
-
-
-
                 // Translate manipulation
                 var originContactPos = arg.PinchManipulation.Original.PrimaryContact;
                 {
@@ -439,7 +434,7 @@ namespace Grow_Up.Helpers
             return new FilterGroup(new IFilter[]
             {
                 FilterFactory.CreateCropFilter(new Rect(center.X-R, center.Y - R, 2*R, 2*R)),
-                FilterFactory.CreateFreeRotationFilter(angle, RotationResizeMode.Ignore),
+                //FilterFactory.CreateFreeRotationFilter(angle, RotationResizeMode.Ignore),
                 FilterFactory.CreateCropFilter(new Rect(R-rect.Width/2, R-rect.Height/2, rect.Width, rect.Height)),
             });
         }

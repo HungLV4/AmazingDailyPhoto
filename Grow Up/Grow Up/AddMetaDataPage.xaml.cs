@@ -26,41 +26,51 @@ using System.Text;
 using Models;
 using Commons;
 using Grow_Up.Model;
+using Grow_Up.Resources;
 
 namespace Grow_Up
 {
     public partial class AddMetaDataPage : PhoneApplicationPage
     {
-        int _dateIndex = -1;
         BackgroundWorker _locationWorker;
+        int _dateIndex = -1;
+        long _dateTaken = -1;
 
         public AddMetaDataPage()
         {
             InitializeComponent();
+
+            DataContext = App.ViewModelData;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            string index;
+            string index, dateTaken;
             NavigationContext.QueryString.TryGetValue("index", out index);
+            NavigationContext.QueryString.TryGetValue("dateTaken", out dateTaken);
             try
             {
-                if (index != null) _dateIndex = int.Parse(index);
+                if (index != null && !index.Equals(String.Empty)) _dateIndex = int.Parse(index);
+                if (dateTaken != null && !dateTaken.Equals(String.Empty)) _dateTaken = long.Parse(dateTaken);
             }
             catch (Exception) { }
 
             if (_dateIndex == -1)
             {
-                OSHelper.RemoveAllBackStackButFirst();
-                if (NavigationService.CanGoBack)
-                {
-                    NavigationService.GoBack();
-                }
+                DatePicker.Value = new DateTime(_dateTaken);
             }
+            else
+                DatePickerContainer.Visibility = Visibility.Collapsed;
 
             this.Loaded += AddMetaDataPage_Loaded;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            this.Loaded -= AddMetaDataPage_Loaded;
         }
 
         void AddMetaDataPage_Loaded(object sender, RoutedEventArgs e)
@@ -76,8 +86,6 @@ namespace Grow_Up
             //save to isolated storage
             DateTime now = DateTime.Now;
             string photoName = String.Format("{0}.jpg", now.Ticks);
-            //string smallThumbName = String.Format("{0}_sthumb.jpg", now.Ticks);
-            //string largeThumbName = String.Format("{0}_lthumb.jpg", now.Ticks);
 
             using (IsolatedStorageFile isolatedStorage = IsolatedStorageFile.GetUserStoreForApplication())
             {
@@ -94,37 +102,39 @@ namespace Grow_Up
                 System.Windows.Media.Imaging.Extensions.SaveJpeg(photo, fileStream, photo.PixelWidth, photo.PixelHeight, 0, Constant.JpegQuality);
                 fileStream.Close();
 
-                //save thumbnail
-                //WriteableBitmap smallThumbnailPhoto = new WriteableBitmap(Constant.ThumbnailSmallSide, Constant.ThumbnailSmallSide);
-                //Bitmap smallThumbnail = await App.ThumbnailModel.RenderThumbnailBitmapAsync(Constant.ThumbnailSmallSide);
-                //using (EditingSession session = new EditingSession(smallThumbnail))
-                //{
-                //    await session.RenderToBitmapAsync(smallThumbnailPhoto.AsBitmap());
-                //}
-                //IsolatedStorageFileStream smallThumbnailStream = isolatedStorage.CreateFile(smallThumbName);
-                //System.Windows.Media.Imaging.Extensions.SaveJpeg(smallThumbnailPhoto, smallThumbnailStream, Constant.ThumbnailSmallSide, Constant.ThumbnailSmallSide, 0, Constant.JpegQuality);
-                //smallThumbnailStream.Close();
+                /*
+                WriteableBitmap smallThumbnailPhoto = new WriteableBitmap(Constant.ThumbnailSmallSide, Constant.ThumbnailSmallSide);
+                Bitmap smallThumbnail = await App.ThumbnailModel.RenderThumbnailBitmapAsync(Constant.ThumbnailSmallSide);
+                using (EditingSession session = new EditingSession(smallThumbnail))
+                {
+                    await session.RenderToBitmapAsync(smallThumbnailPhoto.AsBitmap());
+                }
+                IsolatedStorageFileStream smallThumbnailStream = isolatedStorage.CreateFile(smallThumbName);
+                System.Windows.Media.Imaging.Extensions.SaveJpeg(smallThumbnailPhoto, smallThumbnailStream, Constant.ThumbnailSmallSide, Constant.ThumbnailSmallSide, 0, Constant.JpegQuality);
+                smallThumbnailStream.Close();
 
-                //WriteableBitmap largeThumbnailPhoto = new WriteableBitmap(Constant.ThumbnailLargeSide, Constant.ThumbnailLargeSide);
-                //Bitmap largeThumbnail = await App.ThumbnailModel.RenderThumbnailBitmapAsync(Constant.ThumbnailLargeSide);
-                //using (EditingSession session = new EditingSession(largeThumbnail))
-                //{
-                //    await session.RenderToBitmapAsync(largeThumbnailPhoto.AsBitmap());
-                //}
-                //IsolatedStorageFileStream largethumbnailStream = isolatedStorage.CreateFile(largeThumbName);
-                //System.Windows.Media.Imaging.Extensions.SaveJpeg(largeThumbnailPhoto, largethumbnailStream, Constant.ThumbnailLargeSide, Constant.ThumbnailLargeSide, 0, Constant.JpegQuality);
-                //largethumbnailStream.Close();
+                WriteableBitmap largeThumbnailPhoto = new WriteableBitmap(Constant.ThumbnailLargeSide, Constant.ThumbnailLargeSide);
+                Bitmap largeThumbnail = await App.ThumbnailModel.RenderThumbnailBitmapAsync(Constant.ThumbnailLargeSide);
+                using (EditingSession session = new EditingSession(largeThumbnail))
+                {
+                    await session.RenderToBitmapAsync(largeThumbnailPhoto.AsBitmap());
+                }
+                IsolatedStorageFileStream largethumbnailStream = isolatedStorage.CreateFile(largeThumbName);
+                System.Windows.Media.Imaging.Extensions.SaveJpeg(largeThumbnailPhoto, largethumbnailStream, Constant.ThumbnailLargeSide, Constant.ThumbnailLargeSide, 0, Constant.JpegQuality);
+                largethumbnailStream.Close();
+                */
             }
+
+            if (_dateIndex == -1)
+                _dateIndex = GetNewPhotoIndex();
 
             Entry entry = new Entry()
             {
                 ImgSrc = photoName,
-                //ImgSmallThumbSrc = smallThumbName,
-                //ImgLargeThumbSrc = largeThumbName,
-                Time = now,
+                Time = DatePicker.Value == null ? now : (DateTime)DatePicker.Value,
                 Date = App.ViewModelData.AllDates[_dateIndex],
-                Note = TxtBoxCaption.Text,
-                Location = TxtBoxLocation.Text
+                Note = (TxtBoxCaption.Text.Trim().Equals(String.Empty) || TxtBoxCaption.Text.Trim().Equals("")) ? AppResources.TextID27 : TxtBoxCaption.Text.Trim(),
+                Location = (TxtBoxLocation.Text.Trim().Equals(String.Empty) || TxtBoxLocation.Text.Trim().Equals("")) ? AppResources.TextID28 : TxtBoxLocation.Text.Trim()
             };
             App.ViewModelData.AddEntry(entry, _dateIndex);
 
@@ -150,6 +160,26 @@ namespace Grow_Up
             {
                 NavigationService.GoBack();
             }
+        }
+
+        private int GetNewPhotoIndex()
+        {
+            var photoDate = DatePicker.Value == null ? DateTime.Now : (DateTime)DatePicker.Value;
+
+            int photoIndex = App.ViewModelData.AllDates.ToList().FindIndex(date => date.CalendarItemDate.Equals(photoDate.Date));
+            if (photoIndex == -1)
+            {
+                // creat new date data
+                DateData today = new DateData()
+                {
+                    CalendarItemDate = photoDate.Date
+                };
+                App.ViewModelData.AddDateData(today);
+                App.ViewModelData.SaveChangesToDb();
+
+                photoIndex = App.ViewModelData.AllDates.Count - 1;
+            }
+            return photoIndex;
         }
 
         private void SetScreenButtonsEnabled(bool enabled)
@@ -180,7 +210,7 @@ namespace Grow_Up
         {
             if (!IsolatedStorageSettings.ApplicationSettings.Contains(Constant.SETTING_FIRST_TIME))
             {
-                MessageBoxResult result = MessageBox.Show(Constant.MSG_LOCATION_WARNING, Constant.MSG_LOCATION_TITLE, MessageBoxButton.OKCancel);
+                MessageBoxResult result = MessageBox.Show(AppResources.TextID16, AppResources.TextID6, MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.OK)
                 {
                     App.ViewModelData.IsLocationOn = true;
@@ -216,8 +246,7 @@ namespace Grow_Up
             {
                 Dispatcher.BeginInvoke(() =>
                 {
-                    ToastPrompt toast = new ToastPrompt() { Message = Constant.MSG_NO_INTERNET_CONNECTION };
-                    toast.Show();
+                    OSHelper.ShowToast(AppResources.TextID17);
 
                     LocationIndicator.IsRunning = false;
                     TxtBoxLocation.IsEnabled = true;
@@ -318,8 +347,7 @@ namespace Grow_Up
 
             Dispatcher.BeginInvoke(() =>
             {
-                ToastPrompt toast = new ToastPrompt() { Message = Constant.MSG_NO_GPS_CONNECTION };
-                toast.Show();
+                OSHelper.ShowToast(AppResources.TextID18);
             });
 
             return null;

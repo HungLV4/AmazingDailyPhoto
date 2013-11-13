@@ -92,7 +92,7 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="#04b384">
-            <shell:ApplicationBarIconButton IconUri="Assets/next.png" Text="process" Click="Process_Btn_Click"/>
+            <shell:ApplicationBarIconButton IconUri="Assets/next.png" Text="|" Click="Process_Btn_Click"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
     
@@ -105,7 +105,7 @@
 
 		<!--TitlePanel contains the name of the application and page title-->
 		<Border Background="#04b384" Height="65" VerticalAlignment="Top">
-			<TextBlock Text="Select month and background" Style="{StaticResource GrowUpHeaderText}"/>
+            <TextBlock Text="{Binding Path=LocalizedResources.TextID15, Source={StaticResource LocalizedStrings}}" Style="{StaticResource GrowUpHeaderText}"/>
 		</Border>
 
         <!--ContentPanel - place additional content here-->

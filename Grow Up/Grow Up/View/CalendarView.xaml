@@ -17,10 +17,12 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="wpcontrols:CalendarItem">
                         <Grid x:Name="OuterGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                            <Border BorderBrush="White"
+                            <Border BorderThickness="1"
                                     HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    BorderThickness="0,0,0,1">
+                                    VerticalAlignment="Stretch">
+                                <Border.BorderBrush>
+                                    <SolidColorBrush Color="White" Opacity="0.4"/>
+                                </Border.BorderBrush>
                                 <Grid Height="68"
                                       HorizontalAlignment="Stretch"
                                       VerticalAlignment="Stretch" >
@@ -47,7 +49,7 @@
                              CalendarItemStyle="{StaticResource CalendarItemStyle}"
                              DatesSource="{Binding Path=Dates}"
                              ColorConverter="{Binding}"
-                             EnableGestures="True"
+                             EnableGestures="False"
                              ShowNavigationButtons="False"
                              SelectionChanged="CalendarView_SelectionChanged"
                              Foreground="White"

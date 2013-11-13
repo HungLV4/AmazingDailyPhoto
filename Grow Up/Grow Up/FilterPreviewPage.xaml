@@ -16,14 +16,14 @@
     shell:SystemTray.IsVisible="False">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="WhiteSmoke">
+    <Grid x:Name="LayoutRoot" Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Border Background="#04b384" Height="65" VerticalAlignment="Top">
-            <TextBlock Text="Add filter" Style="{StaticResource GrowUpHeaderText}"/>
+            <TextBlock Text="{Binding Path=LocalizedResources.TextID4, Source={StaticResource LocalizedStrings}}" Style="{StaticResource GrowUpHeaderText}"/>
         </Border>
         <Image x:Name="PhotoViewer"
                Grid.Row="1"
@@ -42,7 +42,7 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="#04b384">
-            <shell:ApplicationBarIconButton IconUri="Assets/check.png" Text="apply" Click="Apply_Btn_Click" />
+            <shell:ApplicationBarIconButton IconUri="Assets/check.png" Text="|" Click="Apply_Btn_Click" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

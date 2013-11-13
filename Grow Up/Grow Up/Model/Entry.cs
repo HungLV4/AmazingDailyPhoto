@@ -133,72 +133,11 @@ namespace Grow_Up.Model
             }
         }
 
-        //public ImageSource Image
-        //{
-        //    get
-        //    {
-        //        if (_imgSrc == null || _imgSrc.Equals(String.Empty))
-        //        {
-        //            return null;
-        //        }
-
-
-        //        using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication())
-        //        {
-        //            if (isoStore.FileExists(_imgSrc))
-        //            {
-        //                using (var source = isoStore.OpenFile(_imgSrc, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-        //                {
-        //                    return PictureDecoder.DecodeJpeg(source);
-        //                }
-        //            }
-        //        }
-
-        //        return null;
-        //    }
-        //}
-
-        //private string _imgSmallThumbSrc;
-        //[Column]
-        //public string ImgSmallThumbSrc
-        //{
-        //    get { return _imgSmallThumbSrc; }
-        //    set
-        //    {
-        //        if (_imgSmallThumbSrc != value)
-        //        {
-        //            NotifyPropertyChanging("ImgSmallThumbSrc");
-        //            _imgSmallThumbSrc = value;
-        //            NotifyPropertyChanged("ImgSmallThumbSrc");
-        //        }
-        //    }
-        //}
-
         [IgnoreDataMember]
         public ImageSource SmallThumbImage
         {
             get
             {
-                //if (_imgSmallThumbSrc == null || _imgSmallThumbSrc.Equals(String.Empty))
-                //{
-                //    return null;
-                //}
-
-                //using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication())
-                //{
-                //    if (isoStore.FileExists(_imgSmallThumbSrc))
-                //    {
-                //        using (var stream = isoStore.OpenFile(_imgSmallThumbSrc, System.IO.FileMode.Open))
-                //        {
-                //            var image = new BitmapImage();
-                //            image.SetSource(stream);
-                //            return image;
-                //        }
-                //    }
-                //}
-
-                //return null;
-
                 if (_imgSrc == null || _imgSrc.Equals(String.Empty))
                 {
                     return null;
@@ -219,45 +158,11 @@ namespace Grow_Up.Model
             }
         }
 
-        //private string _imgLargeThumbSrc;
-        //[Column]
-        //public string ImgLargeThumbSrc
-        //{
-        //    get { return _imgLargeThumbSrc; }
-        //    set
-        //    {
-        //        if (_imgLargeThumbSrc != value)
-        //        {
-        //            NotifyPropertyChanging("ImgLargeThumbSrc");
-        //            _imgLargeThumbSrc = value;
-        //            NotifyPropertyChanged("ImgLargeThumbSrc");
-        //        }
-        //    }
-        //}
-
         [IgnoreDataMember]
         public ImageSource LargeThumbImage
         {
             get
             {
-                //if (_imgLargeThumbSrc == null || _imgLargeThumbSrc.Equals(String.Empty))
-                //{
-                //    return null;
-                //}
-
-                //using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication())
-                //{
-                //    if (isoStore.FileExists(_imgLargeThumbSrc))
-                //    {
-                //        using (var stream = isoStore.OpenFile(_imgLargeThumbSrc, System.IO.FileMode.Open))
-                //        {
-                //            var image = new BitmapImage();
-                //            image.SetSource(stream);
-                //            return image;
-                //        }
-                //    }
-                //}
-
                 if (_imgSrc == null || _imgSrc.Equals(String.Empty))
                 {
                     return null;

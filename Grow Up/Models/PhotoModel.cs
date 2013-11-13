@@ -207,20 +207,23 @@ namespace Models
         /// Apply filter to image. Notice that FilterModel may consist of many IFilter components.
         /// </summary>
         /// <param name="filter">Filter to apply</param>
-        public void ApplyFilter(FilterModel filter)
+        public void ApplyFilter(FilterModel filter, bool shouldCrop)
         {
             AppliedFilters.Add(filter);
 
             // cropping photo
-            int minSide = (int)Math.Min(Width, Height);
-            Windows.Foundation.Rect rect = new Windows.Foundation.Rect()
+            if (shouldCrop)
             {
-                Width = minSide,
-                Height = minSide,
-                X = (Width - minSide) / 2,
-                Y = (Height - minSide) / 2,
-            };
-            _session.AddFilter(FilterFactory.CreateCropFilter(rect));
+                int minSide = (int)Math.Min(Width, Height);
+                Windows.Foundation.Rect rect = new Windows.Foundation.Rect()
+                {
+                    Width = minSide,
+                    Height = minSide,
+                    X = (Width - minSide) / 2,
+                    Y = (Height - minSide) / 2,
+                };
+                _session.AddFilter(FilterFactory.CreateCropFilter(rect));
+            }
 
             foreach (IFilter f in filter.Components)
             {

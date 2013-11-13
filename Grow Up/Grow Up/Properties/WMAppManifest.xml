@@ -1,7 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{60795534-fa2e-4bd9-aaf4-2b9333040b34}" Title="Amazing Daily Photo" RuntimeType="Silverlight" Version="1.1.1.4" Genre="apps.normal" Author="Little Shrimp" Description="Sample description" Publisher="Little Shrimp" PublisherID="{300d95ab-d4dc-4772-be2f-b43e6782f23c}">
+  <Languages xmlns="">
+    <Language code="qps-ploc" />
+    <Language code="vi-VN" />
+    <Language code="en" />
+  </Languages>
+  <App xmlns="" ProductID="{60795534-fa2e-4bd9-aaf4-2b9333040b34}" Title="Amazing Daily Photo" RuntimeType="Silverlight" Version="1.2.1.4" Genre="apps.normal" Author="Little Shrimp" Description="Sample description" Publisher="Little Shrimp" PublisherID="{300d95ab-d4dc-4772-be2f-b43e6782f23c}">
     <IconPath IsRelative="true" IsResource="false">Assets\Tiles\icon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_ISV_CAMERA" />

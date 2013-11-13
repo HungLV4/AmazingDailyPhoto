@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define DEBUG_AGENT
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -28,13 +30,18 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Grow_Up.Helpers;
 using ExifLib;
 using Models;
+using Grow_Up.Framework;
+using Microsoft.Xna.Framework.Media.PhoneExtensions;
+using Microsoft.Live;
 
 namespace Grow_Up
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        int photoIndex = -1;
-        RAJPEGDecoder decoder = new RAJPEGDecoder();
+        bool _isMenuOpen = false;
+        FrameworkElement _contentPanel;
+
+        RAJPEGDecoder _decoder;
 
         public MainPage()
         {
@@ -42,18 +49,7 @@ namespace Grow_Up
 
             DataContext = App.ViewModelData;
 
-            //Loaded += (s, e) =>
-            //{
-            //    DispatcherTimer timer = new DispatcherTimer();
-            //    timer.Tick += (ss, ee) =>
-            //    {
-            //        const string current = "ApplicationCurrentMemoryUsage";
-            //        var currentBytes = ((long)DeviceExtendedProperties.GetValue(current)) / 1024.0 / 1024.0;
-            //        System.Diagnostics.Debug.WriteLine(String.Format("Memory  = {0,5:F} MB / {1,5:F} MB\n", currentBytes, DeviceStatus.ApplicationMemoryUsageLimit / 1024 / 1024));
-            //    };
-            //    timer.Interval = new TimeSpan(0, 0, 0, 1, 0);
-            //    timer.Start();
-            //};
+            _contentPanel = this.ContentPanel as FrameworkElement;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -83,20 +79,30 @@ namespace Grow_Up
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            decoder.Output = PanZoomImageViewer;
-
             var askforReview = (bool)IsolatedStorageSettings.ApplicationSettings["askforreview"];
             if (askforReview)
             {
                 //make sure we only ask once! 
                 IsolatedStorageSettings.ApplicationSettings["askforreview"] = false;
-                var returnvalue = MessageBox.Show("Thank you for using Amazing Daily Photo for a while now, would you like to review this app?", "Please review my app", MessageBoxButton.OKCancel);
+                var returnvalue = MessageBox.Show(AppResources.TextID20, AppResources.TextID21, MessageBoxButton.OKCancel);
                 if (returnvalue == MessageBoxResult.OK)
                 {
                     var marketplaceReviewTask = new MarketplaceReviewTask();
                     marketplaceReviewTask.Show();
                 }
             }
+
+#if DEBUG_AGENT
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Tick += (ss, ee) =>
+            {
+                const string current = "ApplicationCurrentMemoryUsage";
+                var currentBytes = ((long)DeviceExtendedProperties.GetValue(current)) / 1024.0 / 1024.0;
+                System.Diagnostics.Debug.WriteLine(String.Format("Memory  = {0,5:F} MB / {1,5:F} MB\n", currentBytes, DeviceStatus.ApplicationMemoryUsageLimit / 1024 / 1024));
+            };
+            timer.Interval = new TimeSpan(0, 0, 0, 1, 0);
+            timer.Start();
+#endif
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -126,6 +132,8 @@ namespace Grow_Up
             if (PhotoViewer.IsOpen)
             {
                 PhotoViewer.IsOpen = false;
+                ContentPanel.IsHitTestVisible = true;
+                _decoder.Dispose();
                 GC.Collect();
                 e.Cancel = true;
             }
@@ -161,11 +169,7 @@ namespace Grow_Up
 
         void saveImageWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            ToastPrompt toast = new ToastPrompt()
-            {
-                Message = Constant.MSG_IMAGE_SAVED
-            };
-            toast.Show();
+            OSHelper.ShowToast(AppResources.TextID19);
         }
 
         private void DateThumbnalChanged(object sender, EventArgs e)
@@ -221,7 +225,17 @@ namespace Grow_Up
             if (entry == null) return;
 
             PhotoViewer.IsOpen = true;
-            decoder.Input = entry.ImageStream;
+            ContentPanel.IsHitTestVisible = false;
+
+            if (entry.Note.Equals(String.Empty) || entry.Note.Equals("")) entry.Note = AppResources.TextID27;
+            if (entry.Location.Equals(String.Empty) || entry.Location.Equals("")) entry.Location = AppResources.TextID28;
+
+            App.ViewModelData.SelectedEntry = entry;
+
+            _decoder = new RAJPEGDecoder();
+            _decoder.Output = PanZoomImageViewer;
+            _decoder.Input = entry.ImageStream;
+
         }
 
         private void CalendarView_SelectionChanged(object sender, EventArgs e)
@@ -230,47 +244,10 @@ namespace Grow_Up
             App.ViewModelData.SelectedDateData = App.ViewModelData.AllDates.Where(date => date.CalendarItemDate.Equals(selectedDate)).FirstOrDefault();
         }
 
-        private void Add_Btn_Click(object sender, EventArgs e)
+        private void SetScreenButtonsHitVisible(bool enable)
         {
-            SetScreenButtonsEnabled(false);
-            //photoIndex = App.ViewModelData.AllDates.ToList().FindIndex(date => date.CalendarItemDate.Equals(CalendarViewOnPage.Calendar.SelectedDate.Date));
-            photoIndex = App.ViewModelData.AllDates.ToList().FindIndex(date => date.CalendarItemDate.Equals(DateTime.Now.Date));
-            if (photoIndex == -1)
-            {
-                // creat new date data
-                DateData today = new DateData()
-                {
-                    CalendarItemDate = DateTime.Now.Date
-                    //CalendarItemDate = CalendarViewOnPage.Calendar.SelectedDate.Date
-                };
-
-                App.ViewModelData.AddDateData(today);
-                App.ViewModelData.SaveChangesToDb();
-
-                photoIndex = App.ViewModelData.AllDates.Count - 1;
-            }
-
-            Uri uri = new Uri(String.Format("/PhotoCapturePage.xaml?index={0}", photoIndex), UriKind.Relative);
-            SetScreenButtonsEnabled(true);
-            NavigationService.Navigate(uri);
-        }
-
-        private void Generate_Btn_Click(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/CalendarGenerationPage.xaml", UriKind.Relative));
-        }
-
-        private void Setting_Btn_Click(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.Relative));
-        }
-
-        private void SetScreenButtonsEnabled(bool enabled)
-        {
-            foreach (ApplicationBarIconButton b in ApplicationBar.Buttons)
-            {
-                b.IsEnabled = enabled;
-            }
+            this.CalendarViewOnPage.IsHitTestVisible = enable;
+            this.DateViewOnPage.IsHitTestVisible = enable;
         }
 
         private void SearchAutoCompleteBox_SuggestionSelected(object sender, SuggestionSelectedEventArgs e)
@@ -283,120 +260,225 @@ namespace Grow_Up
                 CalendarViewOnPage.Calendar.SelectedYear = entry.Time.Year;
                 CalendarViewOnPage.Calendar.Refresh();
 
-                slidePanorama(PanoramaRoot);
+                // close menu
+                if (_isMenuOpen) CloseSettings();
 
                 DateViewOnPage.SlideView.SelectedItem = entry;
             }
         }
 
-        private void slidePanorama(Panorama pan)
+        private void Setting_Btn_Click(object sender, RoutedEventArgs e)
         {
-            //System.Diagnostics.Debug.WriteLine(CalendarViewOnPage.Calendar.SelectedMonth);
-
-            FrameworkElement panWrapper = VisualTreeHelper.GetChild(pan, 0) as FrameworkElement;
-            FrameworkElement panTitle = VisualTreeHelper.GetChild(panWrapper, 1) as FrameworkElement;
-
-            //Get the panorama layer to calculate all panorama items size 
-            FrameworkElement panLayer = VisualTreeHelper.GetChild(panWrapper, 2) as FrameworkElement;
-
-            //Get the title presenter to calculate the title size
-            FrameworkElement panTitlePresenter = VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(panTitle, 0) as FrameworkElement, 1) as FrameworkElement;
-
-            //Current panorama item index
-            int curIndex = pan.SelectedIndex;
-
-            //Get the next of next panorama item 
-            FrameworkElement third = VisualTreeHelper.GetChild(pan.Items[(curIndex + 2) % pan.Items.Count] as PanoramaItem, 0) as FrameworkElement;
-
-            //Be sure the RenderTransform is TranslateTransform 
-            if (!(pan.RenderTransform is TranslateTransform) || !(panTitle.RenderTransform is TranslateTransform))
-            {
-                pan.RenderTransform = new TranslateTransform();
-                panTitle.RenderTransform = new TranslateTransform();
-            }
-
-            //Increase width of panorama to let it render the next slide (if not, default panorama is 480px and the null area appear if we transform it) 
-            pan.Width = 960;
-
-            //Animate panorama control to the right   
-            Storyboard sb = new Storyboard();
-            DoubleAnimation a = new DoubleAnimation();
-            a.From = 0;
-            a.To = -(pan.Items[curIndex] as PanoramaItem).ActualWidth;
-            //Animate the x transform to a width of one item  
-            a.Duration = new Duration(TimeSpan.FromMilliseconds(700));
-            a.EasingFunction = new CircleEase();
-            //This is default panorama easing effect  
-            sb.Children.Add(a);
-            Storyboard.SetTarget(a, pan.RenderTransform);
-            Storyboard.SetTargetProperty(a, new PropertyPath(TranslateTransform.XProperty));
-
-            //Animate panorama title separately 
-            DoubleAnimation aTitle = new DoubleAnimation();
-            aTitle.From = 0;
-            aTitle.To = (panLayer.ActualWidth - panTitlePresenter.ActualWidth) / (pan.Items.Count - 1) * 1.5;
-            //Calculate where should the title animate to 
-            aTitle.Duration = a.Duration;
-            aTitle.EasingFunction = a.EasingFunction;
-            //This is default panorama easing effect   
-            sb.Children.Add(aTitle);
-            Storyboard.SetTarget(aTitle, panTitle.RenderTransform);
-            Storyboard.SetTargetProperty(aTitle, new PropertyPath(TranslateTransform.XProperty));
-
-            //Start the effect  
-            sb.Begin();
-            //After effect completed, we change the selected item  
-            a.Completed += (obj, args) =>
-            {
-                //Reset panorama width       
-                pan.Width = 480;
-                //Change the selected item       
-                (pan.Items[curIndex] as PanoramaItem).Visibility = Visibility.Collapsed;
-                pan.SetValue(Panorama.SelectedItemProperty, pan.Items[(curIndex + 1) % pan.Items.Count]);
-                pan.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                (pan.Items[curIndex] as PanoramaItem).Visibility = Visibility.Visible;
-                //Reset panorama render transform   
-                (pan.RenderTransform as TranslateTransform).X = 0;
-                //Reset title render transform      
-                (panTitle.RenderTransform as TranslateTransform).X = 0;
-                //Because of the next of next item will be load after we change the selected index to next item  
-                //I do not want it appear immediately without any effect, so I create a custom effect for it   
-                if (!(third.RenderTransform is TranslateTransform))
-                {
-                    third.RenderTransform = new TranslateTransform();
-                }
-                Storyboard sb2 = new Storyboard();
-                DoubleAnimation aThird = new DoubleAnimation()
-                {
-                    From = 100,
-                    To = 0,
-                    Duration = new Duration(TimeSpan.FromMilliseconds(300))
-                };
-                sb2.Children.Add(aThird);
-                Storyboard.SetTarget(aThird, third.RenderTransform);
-                Storyboard.SetTargetProperty(aThird, new PropertyPath(TranslateTransform.XProperty));
-                sb2.Begin();
-            };
+            NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.Relative));
         }
 
-        //private void ImportBtn_Click(object sender, EventArgs e)
-        //{
-        //    MediaLibrary library = new MediaLibrary();
-        //    foreach (var pic in library.Pictures)
-        //    {
-        //        ExifReader reader = null;
-        //        try
-        //        {
-        //            reader = new ExifReader(pic.GetImage());
-        //            DateTime capturedDate;
-        //            reader.GetTagValue(ExifTags.DateTime, out capturedDate);
-        //        }
-        //        catch (ExifLibException) { System.Diagnostics.Debug.WriteLine("exception everywhere!"); }
-        //        finally
-        //        {
-        //            if (reader != null) reader.Dispose();
-        //        }
-        //    }
-        //}
+        private void Generate_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/CalendarGenerationPage.xaml", UriKind.Relative));
+        }
+
+        #region slide menu gesture
+        private void GestureListener_DragDelta(object sender, DragDeltaGestureEventArgs e)
+        {
+            var position = e.GetPosition(this.DateViewOnPage);
+            if (position.X > 0 && position.Y > 0
+                && position.X < this.DateViewOnPage.ActualWidth
+                && position.Y < this.DateViewOnPage.ActualHeight
+                && App.ViewModelData.SelectedDateData != null
+                && App.ViewModelData.SelectedDateData.Entries.Count > 1)
+            {
+                return;
+            }
+
+            if (e.Direction == System.Windows.Controls.Orientation.Horizontal && e.HorizontalChange > 0)
+            {
+                double offset = _contentPanel.GetHorizontalOffset().Value + e.HorizontalChange;
+                if (offset > Constant.DISTANCE_DRAG_DELTA_2_OPEN && !_isMenuOpen)
+                {
+                    OpenSettings();
+                }
+                else if (offset > Constant.DISTANCE_DRAG_DELTA_2_OPEN && _isMenuOpen)
+                {
+
+                }
+                else
+                {
+                    _contentPanel.SetHorizontalOffset(offset);
+                }
+            }
+            else if (e.Direction == System.Windows.Controls.Orientation.Horizontal && e.HorizontalChange < 0)
+            {
+                double offset = _contentPanel.GetHorizontalOffset().Value + e.HorizontalChange;
+                if (offset < Constant.DISTANCE_DRAG_DELTA_2_CLOSE && _isMenuOpen)
+                {
+                    CloseSettings();
+                }
+                else if (offset < Constant.DISTANCE_DRAG_DELTA_2_CLOSE && !_isMenuOpen) { }
+                else
+                {
+                    _contentPanel.SetHorizontalOffset(offset);
+                }
+            }
+        }
+
+        private void GestureListener_DragCompleted(object sender, DragCompletedGestureEventArgs e)
+        {
+            var position = e.GetPosition(CalendarViewOnPage);
+            if (position.X > 0 && position.Y > 0
+                && position.X < CalendarViewOnPage.ActualWidth
+                && position.Y < CalendarViewOnPage.ActualHeight
+                && e.Direction == System.Windows.Controls.Orientation.Vertical)
+            {
+                if (e.VerticalChange > 0) CalendarViewOnPage.Calendar.IncrementMonth();
+                else CalendarViewOnPage.Calendar.DecrementMonth();
+            }
+
+            double offset = _contentPanel.GetHorizontalOffset().Value;
+            if (offset > Constant.DISTANCE_DRAG_COMPLETED_2_OPENCLOSE && !_isMenuOpen) OpenSettings();
+            else if (offset <= Constant.DISTANCE_DRAG_COMPLETED_2_OPENCLOSE && _isMenuOpen) CloseSettings();
+            else ResetLayoutRoot();
+        }
+
+        private void CloseSettings()
+        {
+            var trans = _contentPanel.GetHorizontalOffset().Transform;
+            trans.Animate(trans.X, 0, TranslateTransform.XProperty, 300, 0, new QuadraticEase
+            {
+                EasingMode = EasingMode.EaseOut
+            });
+
+            _isMenuOpen = false;
+            SetScreenButtonsHitVisible(true);
+        }
+
+        private void OpenSettings()
+        {
+            var trans = _contentPanel.GetHorizontalOffset().Transform;
+            trans.Animate(trans.X, 380, TranslateTransform.XProperty, 300, 0, new QuadraticEase
+            {
+                EasingMode = EasingMode.EaseOut
+            });
+
+            _isMenuOpen = true;
+            SetScreenButtonsHitVisible(false);
+        }
+
+        private void ResetLayoutRoot()
+        {
+            if (!_isMenuOpen)
+                CloseSettings();
+            else
+                OpenSettings();
+        }
+        #endregion
+
+        private void CameraTakeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            int photoIndex = App.ViewModelData.AllDates.ToList().FindIndex(date => date.CalendarItemDate.Equals(DateTime.Now.Date));
+            if (photoIndex == -1)
+            {
+                // creat new date data
+                DateData today = new DateData()
+                {
+                    CalendarItemDate = DateTime.Now.Date
+                };
+
+                App.ViewModelData.AddDateData(today);
+                App.ViewModelData.SaveChangesToDb();
+
+                photoIndex = App.ViewModelData.AllDates.Count - 1;
+            }
+
+            Uri uri = new Uri(String.Format("/PhotoCapturePage.xaml?index={0}", photoIndex), UriKind.Relative);
+            NavigationService.Navigate(uri);
+        }
+
+        private void ChoosePhotoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            PhotoChooserTask photoTask = new PhotoChooserTask();
+            photoTask.Completed += photoTask_Completed;
+            photoTask.Show();
+        }
+
+        void photoTask_Completed(object sender, PhotoResult e)
+        {
+            if (e.TaskResult == TaskResult.OK && e.Error == null)
+            {
+                var photoStream = new MemoryStream();
+                var thumbnailStream = new MemoryStream();
+                var library = new MediaLibrary();
+                var dateTaken = DateTime.Now;
+
+                bool found = false;
+                foreach (var pic in library.Pictures)
+                {
+                    if (e.OriginalFileName.Equals(MediaLibraryExtensions.GetPath(pic)))
+                    {
+                        pic.GetImage().CopyTo(photoStream);
+                        photoStream.Seek(0, SeekOrigin.Begin);
+
+                        pic.GetPreviewImage().CopyTo(thumbnailStream);
+                        thumbnailStream.Seek(0, SeekOrigin.Begin);
+
+                        dateTaken = pic.Date;
+
+                        NokiaImaginHelper.PreparePhoto(photoStream, thumbnailStream);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    NavigationService.Navigate(new Uri(String.Format("/FilterPreviewPage.xaml?dateTaken={0}&shouldCrop={1}", dateTaken.Ticks, Constant.NORMAL_MODE), UriKind.Relative));
+                }
+            }
+        }
+
+        private void skydrive_SessionChanged(object sender, Microsoft.Live.Controls.LiveConnectSessionChangedEventArgs e)
+        {
+            if (e != null && e.Status == LiveConnectSessionStatus.Connected)
+            {
+                App.ViewModelData.LiveClient = new LiveConnectClient(e.Session);
+                UploadBtn.IsEnabled = true;
+            }
+            else
+            {
+                App.ViewModelData.LiveClient = null;
+                if(e.Error != null)
+                    OSHelper.ShowToast(AppResources.TextID31);
+            }
+        }
+
+        #region currently not used functions
+        private async void GetAccountPicture()
+        {
+            try
+            {
+                LiveOperationResult operationResult = await App.ViewModelData.LiveClient.GetAsync("me/picture");
+                var jsonResult = operationResult.Result as dynamic;
+                string location = jsonResult.location ?? string.Empty;
+                if (!location.Equals(string.Empty))
+                {
+                    ImageProfilePicture.Source = new BitmapImage(new Uri(location, UriKind.Absolute));
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        #endregion
+
+        private void Upload_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/UploadPage.xaml", UriKind.Relative));
+        }
+
+        private void Menu_Btn_Tapped(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (_isMenuOpen) CloseSettings();
+            else OpenSettings();
+        }
     }
 }
